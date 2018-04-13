@@ -434,7 +434,12 @@ int scoreFor (int player, struct gameState *state) {
     }
 
   //score from deck
-  for (i = 0; i < state->discardCount[player]; i++)
+    /****************************************************************/
+    /****************************************************************/
+    /* BUG FOUND HERE!!!! "deckCount" was originally "discardCount" */
+    /****************************************************************/
+    /****************************************************************/
+  for (i = 0; i < state->deckCount[player]; i++)
     {
       if (state->deck[player][i] == curse) { score = score - 1; };
       if (state->deck[player][i] == estate) { score = score + 1; };
@@ -639,29 +644,41 @@ int getCost(int cardNumber)
 void adventurerEffect(struct gameState *state, int curPlayer) {
 
   int temphand[MAX_HAND];// moved above the if statement
-  int drawntreasure=0;
+  int drawntreasure = 0;
   int cardDrawn;
   int z = 0;// this is the counter for the temp hand
 
-  while(drawntreasure<2) {
-    if (state->deckCount[curPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
+  while(drawntreasure < 2) {
+    /***************************************************************************
+     ***************************************************************************
+     * MINOR BUG FOUND HERE!!!! shuffle statement does not do anything, EVER!!!      
+     * This statement says "if there is nothing in the deck, shuffle the deck" 
+     ***************************************************************************
+     ***************************************************************************/
+    if (state->deckCount[curPlayer] < 1){//if the deck is empty we need to shuffle discard and add to deck
       shuffle(curPlayer, state);
     }
     drawCard(curPlayer, state);
-    cardDrawn = state->hand[curPlayer][state->handCount[curPlayer]-1];//top card of hand is most recently drawn card.
+    cardDrawn = state->hand[curPlayer][state->handCount[curPlayer] - 1];//top card of hand is most recently drawn card.
     if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
       drawntreasure++;
     else{
-      temphand[z]=cardDrawn;
+      temphand[z] = cardDrawn;
       state->handCount[curPlayer]--; //this should just remove the top card (the most recently drawn one).
       z++;
     }
   }
 
-  while(z-1>=0) {
-    state->discard[curPlayer][state->discardCount[curPlayer]++]=temphand[z-1]; // discard all cards in play that have been drawn
-    z=z-1;
+  while(z - 1 >= 0) {
+    state->discard[curPlayer][state->discardCount[curPlayer]++] = temphand[z - 1]; // discard all cards in play that have been drawn
+    //z = z - 1;
   }
+  /***************************************************************************
+   ***************************************************************************
+   * BUG FOUND HERE!!!! "discard" function is not called here, so the adventure
+   * card is not displayed in the "played cards" list when it is played. 
+   ***************************************************************************
+   ***************************************************************************/
 }
 
 void smithyEffect(struct gameState* state, int curPlayer, int handPos) {
@@ -673,18 +690,19 @@ void smithyEffect(struct gameState* state, int curPlayer, int handPos) {
   }
       
   //discard card from hand
-  discardCard(handPos, curPlayer, state, 0);
+  discardCard(handPos, curPlayer, state, 1);
 }
 
 void villageEffect(struct gameState* state, int curPlayer, int handPos) {
+
   //+1 Card
-      drawCard(curPlayer, state);
-      
-      //+2 Actions
-      state->numActions = state->numActions + 2;
-      
-      //discard played card from hand
-      discardCard(handPos, curPlayer, state, 0);
+  drawCard(curPlayer, state);
+  
+  //+2 Actions
+  state->numActions = state->numActions + 3;
+  
+  //discard played card from hand
+  discardCard(handPos, curPlayer, state, 0);
 }
 
 void baronEffect(struct gameState* state, int curPlayer, int choice) {
@@ -726,7 +744,7 @@ void baronEffect(struct gameState* state, int curPlayer, int choice) {
           
   else {
     if (supplyCount(estate, state) > 0) {
-      gainCard(estate, state, 0, curPlayer); //Gain an estate
+      gainCard(estate, state, 1, curPlayer); //Gain an estate
       state->supplyCount[estate]--; //Decrement Estates
       if (supplyCount(estate, state) == 0) {
         isGameOver(state);
@@ -737,13 +755,25 @@ void baronEffect(struct gameState* state, int curPlayer, int choice) {
 
 
 int embargoEffect(struct gameState* state, int curPlayer, int handPos, int choice) {
+
+  /***************************************************************************
+   ***************************************************************************
+   * BUG FOUND HERE!!!! There is no check to see if the player entered a
+   * choice. Also, curses are not working in this play.
+   ***************************************************************************
+   ***************************************************************************/
   //+2 Coins
   state->coins = state->coins + 2;
   
+  /***************************************************************************
+   ***************************************************************************
+   * BUG FOUND HERE!!!! Player can play 100 with no errors.
+   ***************************************************************************
+   ***************************************************************************/
   //see if selected pile is in play
-  if ( state->supplyCount[choice] == -1 ) {
-    return -1;
-  }
+  // if ( state->supplyCount[choice] == -1 ) {
+  //   return -1;
+  // }
       
   //add embargo token to selected supply pile
   state->embargoTokens[choice]++;
@@ -773,7 +803,6 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     nextPlayer = 0;
   }
   
-	
   //uses switch to select card and perform actions
   switch( card ) 
     {
@@ -1206,6 +1235,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	  state->deck[i][state->deckCount[i]--] = curse;//Top card now a curse
 	}
       }
+      discardCard(handPos, currentPlayer, state, 0);
       return 0;
 		
     case treasure_map:
