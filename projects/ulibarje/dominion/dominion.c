@@ -671,7 +671,8 @@ void adventurerEffect(struct gameState *state, int curPlayer) {
 
   while(z - 1 >= 0) {
     state->discard[curPlayer][state->discardCount[curPlayer]++] = temphand[z - 1]; // discard all cards in play that have been drawn
-    //z = z - 1;
+    //z = z - 1; 	//---> I introduced this bug because it can be easy to forget 
+    				// to iterate your index
   }
   /***************************************************************************
    ***************************************************************************
@@ -690,8 +691,9 @@ void smithyEffect(struct gameState* state, int curPlayer, int handPos) {
   }
       
   //discard card from hand
-  discardCard(handPos, curPlayer, state, 1);
+  discardCard(handPos, curPlayer, state, 1); //---> Introduced bug, changed the 0 flag to 1
 }
+
 
 void villageEffect(struct gameState* state, int curPlayer, int handPos) {
 
@@ -699,11 +701,12 @@ void villageEffect(struct gameState* state, int curPlayer, int handPos) {
   drawCard(curPlayer, state);
   
   //+2 Actions
-  state->numActions = state->numActions + 3;
+  state->numActions = state->numActions + 2;
   
   //discard played card from hand
   discardCard(handPos, curPlayer, state, 0);
 }
+
 
 void baronEffect(struct gameState* state, int curPlayer, int choice) {
   state->numBuys++; //Increase buys by 1!
