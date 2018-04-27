@@ -218,7 +218,7 @@ int main() {
 	if(assertTrue(testGame.handCount[player], refGame.handCount[player] + numDraws - numDiscards)) {
 		allPassed = 1;
 	}
-	printf("Testing if new cards are coins					--->	")
+	printf("Testing if new cards are coins					--->	");
 	printf("Testing playedCardCount							--->	");
 	if(assertTrue(testGame.playedCardCount, refGame.playedCardCount + 1)) {
 		allPassed = 1;
