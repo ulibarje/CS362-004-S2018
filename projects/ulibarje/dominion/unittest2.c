@@ -20,18 +20,30 @@
 #define WHT   "\x1B[37m"
 #define RESET "\x1B[0m"
 
+#define PRINT 0
+
 #define TESTFUNC "endTurn"
 
 
+/*************************************************************************
+* Name: assertTrue
+*
+* Description: 
+*
+*************************************************************************/
 int assertTrue(int test, int expect) {
 	if(test == expect) {
-		printf(GRN "TEST PASSED " RESET);
-		printf("Test: %d, Expected: %d\n", test, expect);
+		if(PRINT) {
+			printf(GRN "TEST PASSED " RESET);
+			printf("Test: %d, Expected: %d\n", test, expect);
+		}
 		return 0;
 	}
 	else {
-		printf(RED "TEST FAILED " RESET);
-		printf("Test: %d, Expected: %d\n", test, expect);
+		if(PRINT) {
+			printf(RED "TEST FAILED " RESET);
+			printf("Test: %d, Expected: %d\n", test, expect);
+		}
 		return 1;
 	}
 }
@@ -169,32 +181,56 @@ int testFunc(struct gameState* testG, struct gameState* game) {
 	int successFlag = 0;
 
 	// Compare values that have changed between regular game and test game
-	printf("whoseTurn test 		---> ");
+	if(PRINT) { printf("whoseTurn test 		---> "); }
 	if(assertTrue(testG->whoseTurn, game->whoseTurn) && successFlag == 0)
 		successFlag = 1;
-	printf("outpostPlayed test 	---> ");
+	if(PRINT) { printf("outpostPlayed test 	---> "); }
 	if(assertTrue(testG->outpostPlayed, game->outpostPlayed) && successFlag == 0)
 		successFlag = 1;
-	printf("phase test 		---> ");
+	if(PRINT) { printf("phase test 		---> "); }
 	if(assertTrue(testG->phase, game->phase) && successFlag == 0)
 		successFlag = 1;
-	printf("numActions test 	---> ");
+	if(PRINT) { printf("numActions test 	---> "); }
 	if(assertTrue(testG->numActions, game->numActions) && successFlag == 0)
 		successFlag = 1;
-	printf("coins test 		---> ");
+	if(PRINT) { printf("coins test 		---> "); }
 	if(assertTrue(testG->coins, game->coins) && successFlag == 0)
 		successFlag = 1;
-	printf("numBuys test 		---> ");
+	if(PRINT) { printf("numBuys test 		---> "); }
 	if(assertTrue(testG->numBuys, game->numBuys) && successFlag == 0)
 		successFlag = 1;
-	printf("playedCardCount test 	---> ");
+	if(PRINT) { printf("playedCardCount test 	---> "); }
 	if(assertTrue(testG->playedCardCount, game->playedCardCount) && successFlag == 0)
 		successFlag = 1;
-	printf("handCount test 		---> ");
+	if(PRINT) { printf("handCount test 		---> "); }
 	if(assertTrue(testG->handCount[testG->whoseTurn], game->handCount[game->whoseTurn]) && successFlag == 0)
 		successFlag = 1;
 
 	return successFlag;
+}
+
+
+/*************************************************************************
+* Name: printTestResult
+*
+* Description: 
+*
+*************************************************************************/
+void printTestResult(int value) {
+	switch(value) {
+		case 0:
+			printf("	Gamestate Comparison ---> " GRN "PASSED\n\n" RESET);
+			break;
+		case 1:
+			printf("	Gamestate Comparison ---> " RED "FAILED: TIER 1\n\n" RESET);
+			break;
+		case 2:
+			printf("	Gamestate Comparison ---> " RED "FAILED: TIER 2\n\n" RESET);
+			break;
+		case 3:
+			printf("	Gamestate Comparison --->  " RED "FAILED: TIER 3\n\n" RESET);
+			break;
+	}//switch
 }
 
 /****************************************************************************************/
@@ -203,18 +239,19 @@ int testFunc(struct gameState* testG, struct gameState* game) {
 
 int main() {
 
-	int i, j, numPlayers;
+	int i, j, numPlayers, passResult;
 
 	int allSuccess = 0;
 	int seed = 123;
 	struct gameState regGame, testGame;
 	int useCards[10] = {adventurer, gardens, embargo, village, minion, mine, cutpurse, sea_hag, tribute, smithy};
 
-	printf(YEL ">>>>>>>>>>>>>>>>>> " CYN "BEGINNING TEST FOR FUNCTION \"%s\"" RESET YEL " <<<<<<<<<<<<<<<<<\n" RESET, TESTFUNC);
+	printf("Beginning \"%s\" test\n", TESTFUNC);
+	// printf(YEL ">>>>>>>>>>>>>>>>>> " CYN "BEGINNING TEST FOR FUNCTION \"%s\"" RESET YEL " <<<<<<<<<<<<<<<<<\n" RESET, TESTFUNC);
 
 	// Iterate through the number of possible players in a single game
 	for(numPlayers = 2; numPlayers <= MAX_PLAYERS; numPlayers++) {
-		printf(YEL ">>>>>>>>>>>>>>>>>>>> " CYN "Testing with a %d player game" RESET YEL " <<<<<<<<<<<<<<<<<<<<<<<<\n"RESET, numPlayers);
+		// printf(YEL ">>>>>>>>>>>>>>>>>>>> " CYN "Testing with a %d player game" RESET YEL " <<<<<<<<<<<<<<<<<<<<<<<<\n"RESET, numPlayers);
 
 		// For each set of "number of players", test the endTurn function for each player.
 		for(j = 0; j < numPlayers; j++) {
@@ -247,29 +284,21 @@ int main() {
 
 			// Compare the test gamestate object with the reference
 			allSuccess = testFunc(&testGame, &regGame);
-			switch(compareGameStates(&testGame, &regGame)) {
-				case 0:
-					printf("	Gamestate Comparison ---> " GRN "PASSED\n\n" RESET);
-					break;
-				case 1:
-					printf("	Gamestate Comparison ---> " RED "FAILED: TIER 1\n\n" RESET);
-					break;
-				case 2:
-					printf("	Gamestate Comparison ---> " RED "FAILED: TIER 2\n\n" RESET);
-					break;
-				case 3:
-					printf("	Gamestate Comparison --->  " RED "FAILED: TIER 3\n\n" RESET);
-					break;
-			}//switch
+
+			// Make sure that the rest of the gamestate has not changed
+			passResult = compareGameStates(&testGame, &regGame);
+
+			if(PRINT) {
+				printTestResult(passResult);
+			}
 		}
 	}
 
 	// All tests have completed, print out if all were successful, or if there was any failures.
 	if(allSuccess == 0)
-		printf(YEL ">>>>>>>>>>>>>>>> " GRN "SUCCESS -- ALL TESTS PASSED" RESET YEL " <<<<<<<<<<<<<<<<<<\n" RESET);
+		printf("SUCCESS -- All Tests Passed\n");
 	else
-		printf(YEL ">>>>>>>>>>>>>>>> " RED "FAIL -- AT LEAST ONE CASE FAILED" RESET YEL " <<<<<<<<<<<<<<<<<<<<\n" RESET);
-
+		printf("FAIL -- At Least One Case Failed\n");
 
 	return 0;
 }

@@ -1,7 +1,7 @@
 /* Name: unittest1
  * Author: Jesse Ulibarri
  * CS362 - Assignment 3
- * Test For: "updateCoins"
+ * Test For: "discardCard"
  */
 
 #include "dominion.h"
@@ -10,6 +10,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define RED   "\x1B[31m"
 #define GRN   "\x1B[32m"
@@ -22,7 +23,7 @@
 
 #define PRINT 0
 
-#define TESTFUNC "updateCoins"
+#define TESTFUNC "discardCard"
 
 
 /*************************************************************************
@@ -65,6 +66,7 @@ int compareGameStates(struct gameState* testG, struct gameState* origG) {
 	int i, j;
 	int stateSuccess = 0;
 
+	// Tier 1
 	if(!(testG->numPlayers == origG->numPlayers)) {
 		stateSuccess = 1;
 		printf("testG->numPlayers: %d, origG->numPlayers: %d\n", testG->numPlayers, origG->numPlayers);
@@ -104,10 +106,10 @@ int compareGameStates(struct gameState* testG, struct gameState* origG) {
 		printf("testG->numActions: %d, origG->numActions: %d\n", testG->numActions, origG->numActions);
 	}
 
-	// if(!(testG->coins == origG->coins)) {
-	// 	stateSuccess = 1;
-	// 	printf("testG->coins: %d, origG->coins: %d\n", testG->coins, origG->coins);
-	// }
+	if(!(testG->coins == origG->coins)) {
+		stateSuccess = 1;
+		printf("testG->coins: %d, origG->coins: %d\n", testG->coins, origG->coins);
+	}
 
 	if(!(testG->numBuys == origG->numBuys)) {
 		stateSuccess = 1;
@@ -119,6 +121,7 @@ int compareGameStates(struct gameState* testG, struct gameState* origG) {
 		printf("testG->playedCardCount: %d, origG->playedCardCount: %d\n", testG->playedCardCount, origG->playedCardCount);
 	}
 
+	// Tier 2
 	if(stateSuccess == 0) {
 		for(i = 0; i < testG->numPlayers; i++) {
 			if(!(testG->handCount[i] == origG->handCount[i]))
@@ -135,6 +138,7 @@ int compareGameStates(struct gameState* testG, struct gameState* origG) {
 				stateSuccess = 2;
 		}
 
+		// Tier 3
 		if(stateSuccess == 0) {
 			for(i = 0; i < testG->numPlayers; i++) {
 				for(j = 0; j < testG->handCount[i]; j++) {
@@ -192,190 +196,95 @@ void printTestResult(int value) {
 	}//switch
 }
 
+
+void printHand(struct gameState* G) {
+	int i;
+	for(i = 0; i < G->handCount[G->whoseTurn]; i++) {
+		printf("Card %d: %d\n", i, G->hand[G->whoseTurn][i]);
+	}
+}
+
 /****************************************************************************************/
 /************************************* MAIN *********************************************/
 /****************************************************************************************/
 
 int main() {
 
-	int bonusCoins, i, passResult;
+	int card, numCards, randCard, passResult, test, toTrash;
 
+	int numTests = 1;
 	int allSuccess = 0;
 	int seed = 123;
 	int numPlayers = 2;
-	int maxBonus = 5;
-	int currentPlayer = 0;
+	int player = 0;
+	int maxCards = 10;
 	struct gameState regGame, testGame;
 	int useCards[10] = {adventurer, gardens, embargo, village, minion, mine, cutpurse, sea_hag, tribute, smithy};
 
-	printf("Beginning \"%s\" test\n", TESTFUNC);
+	srand(time(NULL));
 
-	initializeGame(numPlayers, useCards, seed, &testGame);
-	memcpy(&regGame, &testGame, sizeof(struct gameState));
-
-	// printf(YEL ">>>>>>>>>>>>>>>>>> " CYN "BEGINNING TEST FOR FUNCTION \"%s\"" RESET YEL " <<<<<<<<<<<<<<<<<\n" RESET, TESTFUNC);
-	// printf(YEL ">>>>>>>>>>>>>>>>>>>>>>> " CYN "Testing with 5 cards in hand" RESET YEL " <<<<<<<<<<<<<<<<<<<<<<<<<\n" RESET);
+	printf("============= Beginning \"%s\" test =============\n", TESTFUNC);
 
 	/****************************************************************************************/
 	/****************************************************************************************/
-	// Set the hand ---> All copper
-	testGame.hand[currentPlayer][0] = copper;
-	testGame.hand[currentPlayer][1] = copper;
-	testGame.hand[currentPlayer][2] = copper;
-	testGame.hand[currentPlayer][3] = copper;
-	testGame.hand[currentPlayer][4] = copper;
+	for(toTrash = 0; toTrash < 2; toTrash++) {
+		for(test = 0; test < numTests; test++) {
+			for(numCards = 1; numCards <= maxCards; numCards++) {
+				// printf("Number of cards: %d, test number: %d, toTrash: %d\n", numCards, test, toTrash);
 
-	regGame.hand[currentPlayer][0] = copper;
-	regGame.hand[currentPlayer][1] = copper;
-	regGame.hand[currentPlayer][2] = copper;
-	regGame.hand[currentPlayer][3] = copper;
-	regGame.hand[currentPlayer][4] = copper;
+				memset(&testGame, '\0', sizeof(struct gameState));
+				initializeGame(numPlayers, useCards, seed, &testGame);
+				testGame.handCount[player] = 0;
+				for(card = 0; card < numCards; card++) {
+					do {
+						randCard = rand() % treasure_map;
+					} while(testGame.supplyCount[randCard] != -1);
 
-	for(i = 0; i < maxBonus; i++) {
-		bonusCoins = i;
-		updateCoins(currentPlayer, &testGame, bonusCoins);
+					testGame.hand[player][card] = randCard;
+					testGame.handCount[player]++;
+				}
+				memcpy(&regGame, &testGame, sizeof(struct gameState));
 
-		if(PRINT)
-			printf("Hand: C C C C C + bonus of %d ---> ", bonusCoins);
-		if(assertTrue(testGame.coins, 5 + bonusCoins) && allSuccess == 0)
-			allSuccess = 1;
+				for(card = 0; card < numCards; card++) {
 
-		// Make sure that the rest of the gamestate has not changed
-		passResult = compareGameStates(&testGame, &regGame);
+					// printf("========== Original Hand =============\n");
+					// printHand(&regGame);
+					// printf("========== Test Hand =============\n");
+					// printHand(&testGame);
+					// printf("\n");
 
-		if(PRINT) {
-			printTestResult(passResult);
-		}
-	}//for
+					randCard = rand() % testGame.handCount[player];
+					discardCard(randCard, player, &testGame, toTrash); // The function-under-test
 
+					// Manually discard the same card from our reference game so that we can compare
+					// the two gamestates to determine if the function is working correctly.
+					if(toTrash == 0) {
+			      		regGame.playedCards[regGame.playedCardCount] = regGame.hand[player][randCard]; 
+			      		regGame.playedCardCount++;
+			      	}
 
-	/****************************************************************************************/
-	/****************************************************************************************/
-	// Set the hand ---> All silver
-	testGame.hand[currentPlayer][0] = silver;
-	testGame.hand[currentPlayer][1] = silver;
-	testGame.hand[currentPlayer][2] = silver;
-	testGame.hand[currentPlayer][3] = silver;
-	testGame.hand[currentPlayer][4] = silver;
+					regGame.hand[player][randCard] = -1;
+				  	if (randCard == (regGame.handCount[player] - 1)) {
+				      	regGame.handCount[player]--;
+				    }
+				  	else {
+				      regGame.hand[player][randCard] = regGame.hand[player][(regGame.handCount[player] - 1)];
+				      regGame.hand[player][regGame.handCount[player] - 1] = -1;
+				      regGame.handCount[player]--;
+				    }
 
-	regGame.hand[currentPlayer][0] = silver;
-	regGame.hand[currentPlayer][1] = silver;
-	regGame.hand[currentPlayer][2] = silver;
-	regGame.hand[currentPlayer][3] = silver;
-	regGame.hand[currentPlayer][4] = silver;
+				    // Compare the two game states and make sure that they are the same
+				    passResult = compareGameStates(&testGame, &regGame);
+				    if(passResult != 0) { allSuccess = 1; }
+				    else {
+				    	printf("discardCard - PASSED: discarded position %d out of %d cards\n", randCard, testGame.handCount[player] + 1);
+				    }
 
-	for(i = 0; i < maxBonus; i++) {
-		bonusCoins = i;
-		updateCoins(currentPlayer, &testGame, bonusCoins);
-
-		if(PRINT)
-			printf("Hand: S S S S S + bonus of %d ---> ", bonusCoins);
-		if(assertTrue(testGame.coins, 10 + bonusCoins) && allSuccess == 0)
-			allSuccess = 1;
-
-		// Make sure that the rest of the gamestate has not changed
-		passResult = compareGameStates(&testGame, &regGame);
-
-		if(PRINT) {
-			printTestResult(passResult);
-		}
-	}
-
-
-	/****************************************************************************************/
-	/****************************************************************************************/
-	// Set the hand ---> All gold
-	testGame.hand[currentPlayer][0] = gold;
-	testGame.hand[currentPlayer][1] = gold;
-	testGame.hand[currentPlayer][2] = gold;
-	testGame.hand[currentPlayer][3] = gold;
-	testGame.hand[currentPlayer][4] = gold;
-
-	regGame.hand[currentPlayer][0] = gold;
-	regGame.hand[currentPlayer][1] = gold;
-	regGame.hand[currentPlayer][2] = gold;
-	regGame.hand[currentPlayer][3] = gold;
-	regGame.hand[currentPlayer][4] = gold;
-
-	for(i = 0; i < maxBonus; i++) {
-		bonusCoins = i;
-		updateCoins(currentPlayer, &testGame, bonusCoins);
-
-		if(PRINT)
-			printf("Hand: G G G G G + bonus of %d ---> ", bonusCoins);
-		if(assertTrue(testGame.coins, 15 + bonusCoins) && allSuccess == 0)
-			allSuccess = 1;
-
-		passResult = compareGameStates(&testGame, &regGame);
-
-		if(PRINT) {
-			printTestResult(passResult);
-		}
-	}
-
-
-	/****************************************************************************************/
-	/****************************************************************************************/
-	// Set the hand ---> One of each
-	testGame.hand[currentPlayer][0] = copper;
-	testGame.hand[currentPlayer][1] = silver;
-	testGame.hand[currentPlayer][2] = gold;
-	testGame.hand[currentPlayer][3] = estate;
-	testGame.hand[currentPlayer][4] = estate;
-
-	regGame.hand[currentPlayer][0] = copper;
-	regGame.hand[currentPlayer][1] = silver;
-	regGame.hand[currentPlayer][2] = gold;
-	regGame.hand[currentPlayer][3] = estate;
-	regGame.hand[currentPlayer][4] = estate;
-
-	for(i = 0; i < maxBonus; i++) {
-		bonusCoins = i;
-		updateCoins(currentPlayer, &testGame, bonusCoins);
-
-		if(PRINT)
-			printf("Hand: C S G E E + bonus of %d ---> ", bonusCoins);
-		if(assertTrue(testGame.coins, 6 + bonusCoins) && allSuccess == 0)
-			allSuccess = 1;
-
-		// Make sure that the rest of the gamestate has not changed
-		passResult = compareGameStates(&testGame, &regGame);
-
-		if(PRINT) {
-			printTestResult(passResult);
-		}
-	}
-
-
-	/****************************************************************************************/
-	/****************************************************************************************/
-	// Set the hand ---> No coins
-	testGame.hand[currentPlayer][0] = curse;
-	testGame.hand[currentPlayer][1] = duchy;
-	testGame.hand[currentPlayer][2] = province;
-	testGame.hand[currentPlayer][3] = estate;
-	testGame.hand[currentPlayer][4] = minion;
-
-	regGame.hand[currentPlayer][0] = curse;
-	regGame.hand[currentPlayer][1] = duchy;
-	regGame.hand[currentPlayer][2] = province;
-	regGame.hand[currentPlayer][3] = estate;
-	regGame.hand[currentPlayer][4] = minion;
-
-	for(i = 0; i < maxBonus; i++) {
-		bonusCoins = i;
-		updateCoins(currentPlayer, &testGame, bonusCoins);
-
-		if(PRINT)
-			printf("Hand: Cur D P E K + bonus of %d ---> ", bonusCoins);
-		if(assertTrue(testGame.coins, 0 + bonusCoins) && allSuccess == 0)
-			allSuccess = 1;
-
-		// Make sure that the rest of the gamestate has not changed
-		passResult = compareGameStates(&testGame, &regGame);
-
-		if(PRINT) {
-			printTestResult(passResult);
+					if(PRINT) {
+						printTestResult(passResult);
+					}
+				}
+			}
 		}
 	}
 
