@@ -24,6 +24,42 @@
 
 #define TESTFUNC "handCard"
 
+char* CARDS[27] = {"curse",
+				   "estate",
+				   "duchy",
+				   "province",
+
+				   "copper",
+				   "silver",
+				   "gold",
+
+				   "adventurer",
+				   
+				   "council_room",
+				   "feast",
+				   "gardens",
+				   "mine", 
+
+				   "remodel",
+				   "smithy",
+				   "village",
+
+				   "baron", 
+
+				   "great_hall",
+				   "minion",
+				   "steward",
+				   "tribute",
+
+				   "ambassador",
+				   "cutpurse",
+				   "embargo",
+				   "outpost",
+				   "salvager",
+				   "sea_hag",
+				   "treasure_map"
+				  };
+
 
 /*************************************************************************
 * Name: assertTrue
@@ -33,69 +69,72 @@
 *************************************************************************/
 int assertTrue(int test, int expect) {
 	if(test == expect) {
-		if(PRINT) {
-			printf(GRN "TEST PASSED " RESET);
-			printf("Test: %d, Expected: %d\n", test, expect);
-		}
+		printf("PASSED\n");
+		// printf("Test: %d, Expected: %d\n", test, expect);
 		return 0;
 	}
 	else {
-		if(PRINT) {
-			printf(RED "TEST FAILED " RESET);
-			printf("Test: %d, Expected: %d\n", test, expect);
-		}
+		printf("FAILED ");
+		printf("Test: %d, Expected: %d\n", test, expect);
 		return 1;
 	}
 }
+
 
 /****************************************************************************************/
 /************************************* MAIN *********************************************/
 /****************************************************************************************/
 int main() {
 
-	int i, player, test, cardNum, result;
+	int i, cardNum, result;
 
-	int maxHandCount = 5;
+	int player = 0;
 	int allSuccess = 0;
 	int seed = 123;
 	struct gameState testGame;
 	int useCards[10] = {adventurer, gardens, embargo, village, minion, mine, cutpurse, sea_hag, tribute, smithy};
 
-	printf("Beginning \"%s\" test\n", TESTFUNC);
+	printf("***************************************************************************\n");
+	printf("************************ BEGINNING \"%s\" TEST ************************\n", TESTFUNC);
+	printf("***************************************************************************\n\n");
 
-	int numTests = 10;
-	for(test = 0; test < numTests; test++) {
-		// printf("\n>>>>>>>>>>>>>>>>> Starting new test <<<<<<<<<<<<<<<<<<<<<<<<<\n");
-		memset(&testGame, '\0', sizeof(struct gameState));
-		initializeGame(MAX_PLAYERS, useCards, seed++, &testGame);
 
-		for (player = 0; player < MAX_PLAYERS; player++) {
+	initializeGame(MAX_PLAYERS, useCards, seed++, &testGame);
 
-			testGame.whoseTurn = player;
-			testGame.handCount[player] = 0;
-			for(i = 0; i < maxHandCount; i++) { drawCard(player, &testGame); }
 
-        	for (cardNum = 0; cardNum < maxHandCount; cardNum++) {
+	testGame.handCount[player] = 27;
+	for(i = 0; i <= treasure_map; i++) { testGame.hand[player][i] = i; }
 
-        		result = handCard(cardNum, &testGame);
+	for (cardNum = 0; cardNum < testGame.handCount[player]; cardNum++) {
 
-        		if(assertTrue(player, whoseTurn(&testGame)))
-        			printf("Wrong player was returned!! Should have been: %d, Player that was returned: %d\n", player, whoseTurn(&testGame));
+		result = handCard(cardNum, &testGame);
 
-        		if(assertTrue(result, testGame.hand[player][cardNum])) {
-        			allSuccess = 1;
-        			printf("TEST FAILED: at player = %d, card position = %d\n", player, cardNum);
-        		}
-           }
-       }
+		if(strlen(CARDS[result]) <= 5)
+			printf("Expecting: %s,			Received: %s			--->	", CARDS[testGame.hand[player][cardNum]], CARDS[result]);
+		else if(strlen(CARDS[result]) <= 7)
+			printf("Expecting: %s,			Received: %s		--->	", CARDS[testGame.hand[player][cardNum]], CARDS[result]);
+		else if(strlen(CARDS[result]) <= 8)
+			printf("Expecting: %s,		Received: %s		--->	", CARDS[testGame.hand[player][cardNum]], CARDS[result]);
+		else if(strlen(CARDS[result]) <= 11)
+			printf("Expecting: %s,		Received: %s	--->	", CARDS[testGame.hand[player][cardNum]], CARDS[result]);
+		else
+			printf("Expecting: %s,	Received: %s	--->	", CARDS[testGame.hand[player][cardNum]], CARDS[result]);
+
+		if(assertTrue(result, testGame.hand[player][cardNum])) {
+			allSuccess = 1;
+		}
 	}
 
+
+	printf("\n");
+	printf("**************************************************\n");
 	// All tests have completed, print out if all were successful, or if there was any failures.
 	if(allSuccess == 0)
-		printf("SUCCESS -- All Tests Passed\n");
+		printf("\"%s\" unit test		---> 	PASSED\n", TESTFUNC);
 	else
-		printf("FAIL -- At Least One Case Failed\n");
-
+		printf("\"%s\" unit test		---> 	FAILED\n", TESTFUNC);
+	printf("**************************************************\n");
+	printf("\n");
 
 	return 0;
 }

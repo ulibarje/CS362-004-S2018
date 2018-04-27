@@ -33,15 +33,15 @@
 *************************************************************************/
 int assertTrue(int test, int expect) {
 	if(test == expect) {
-		if(PRINT) {
-			printf(GRN "TEST PASSED " RESET);
+		if(PRINT ){
+			printf("TEST PASSED ");
 			printf("Test: %d, Expected: %d\n", test, expect);
 		}
 		return 0;
 	}
 	else {
-		if(PRINT) {
-			printf(RED "TEST FAILED " RESET);
+		if(PRINT){
+			printf("TEST FAILED ");
 			printf("Test: %d, Expected: %d\n", test, expect);
 		}
 		return 1;
@@ -60,100 +60,123 @@ int assertTrue(int test, int expect) {
 *	checked in the test case, and thus, do not need to be tested again.
 *
 *************************************************************************/
-int compareGameStates(struct gameState* testG, struct gameState* origG) {
+int compareGameStates(struct gameState* testG, struct gameState* refG) {
 
 	int i, j;
 	int stateSuccess = 0;
 
-	if(!(testG->numPlayers == origG->numPlayers)) {
+	// Tier 1
+	if(!(testG->numPlayers == refG->numPlayers)) {
 		stateSuccess = 1;
-		printf("testG->numPlayers: %d, origG->numPlayers: %d\n", testG->numPlayers, origG->numPlayers);
+		printf("FAILED: testG->numPlayers: %d, refG->numPlayers: %d\n", testG->numPlayers, refG->numPlayers);
+		
 	}
 
-	for(i = 0; i < treasure_map + 1; i++) {
-		if(!(testG->supplyCount[i] == origG->supplyCount[i])) {
-			stateSuccess = 1;
-			printf("testG->supplyCount[%d]: %d, origG->supplyCount[%d]: %d\n", i, testG->supplyCount[i], i, origG->supplyCount[i]);
+	for(i = 2; i < treasure_map + 1; i++) {
+		if(!(testG->supplyCount[i] == refG->supplyCount[i])) {
+		stateSuccess = 1;
+			printf("FAILED: testG->supplyCount[%d]: %d, refG->supplyCount[%d]: %d\n", i, testG->supplyCount[i], i, refG->supplyCount[i]);
 		}
 	}
 
 	for(i = 0; i < treasure_map + 1; i++) {
-		if(!(testG->embargoTokens[i] == origG->embargoTokens[i])) {
-			stateSuccess = 1;
-			printf("testG->embargoTokens[%d]: %d, origG->embargoTokens[%d]: %d\n", i, testG->embargoTokens[i], i, origG->embargoTokens[i]);
+		if(!(testG->embargoTokens[i] == refG->embargoTokens[i])) {
+		stateSuccess = 1;
+			printf("FAILED: testG->embargoTokens[%d]: %d, refG->embargoTokens[%d]: %d\n", i, testG->embargoTokens[i], i, refG->embargoTokens[i]);
 		}
 	}
 
-	if(!(testG->outpostPlayed == origG->outpostPlayed)) {
+	if(!(testG->outpostPlayed == refG->outpostPlayed)) {
 		stateSuccess = 1;
-		printf("testG->outpostPlayed: %d, origG->outpostPlayed: %d\n", testG->outpostPlayed, origG->outpostPlayed);
+		printf("FAILED: testG->outpostPlayed: %d, refG->outpostPlayed: %d\n", testG->outpostPlayed, refG->outpostPlayed);
 	}
 
-	if(!(testG->whoseTurn == origG->whoseTurn)) {
+	if(!(testG->whoseTurn == refG->whoseTurn)) {
 		stateSuccess = 1;
-		printf("testG->whoseTurn: %d, origG->whoseTurn: %d\n", testG->whoseTurn, origG->whoseTurn);
+		printf("FAILED: testG->whoseTurn: %d, refG->whoseTurn: %d\n", testG->whoseTurn, refG->whoseTurn);
 	}
 
-	if(!(testG->phase == origG->phase)) {
+	if(!(testG->phase == refG->phase)) {
 		stateSuccess = 1;
-		printf("testG->phase: %d, origG->phase: %d\n", testG->phase, origG->phase);
+		printf("FAILED: testG->phase: %d, refG->phase: %d\n", testG->phase, refG->phase);
 	}
 
-	if(!(testG->numActions == origG->numActions)) {
+	if(!(testG->numActions == refG->numActions)) {
 		stateSuccess = 1;
-		printf("testG->numActions: %d, origG->numActions: %d\n", testG->numActions, origG->numActions);
+		printf("FAILED: testG->numActions: %d, refG->numActions: %d\n", testG->numActions, refG->numActions);
 	}
 
-	// if(!(testG->coins == origG->coins)) {
+	// if(!(testG->coins == refG->coins)) {
 	// 	stateSuccess = 1;
-	// 	printf("testG->coins: %d, origG->coins: %d\n", testG->coins, origG->coins);
+	// 	printf("FAILED: testG->coins: %d, refG->coins: %d\n", testG->coins, refG->coins);
 	// }
 
-	if(!(testG->numBuys == origG->numBuys)) {
+	if(!(testG->numBuys == refG->numBuys)) {
 		stateSuccess = 1;
-		printf("testG->numBuys: %d, origG->numBuys: %d\n", testG->numBuys, origG->numBuys);
+		printf("FAILED: testG->numBuys: %d, refG->numBuys: %d\n", testG->numBuys, refG->numBuys);
 	}
 
-	if(!(testG->playedCardCount == origG->playedCardCount)) {
+	if(!(testG->playedCardCount == refG->playedCardCount)) {
 		stateSuccess = 1;
-		printf("testG->playedCardCount: %d, origG->playedCardCount: %d\n", testG->playedCardCount, origG->playedCardCount);
+		printf("FAILED: testG->playedCardCount: %d, refG->playedCardCount: %d\n", testG->playedCardCount, refG->playedCardCount);
 	}
 
+	// Tier 2
 	if(stateSuccess == 0) {
 		for(i = 0; i < testG->numPlayers; i++) {
-			if(!(testG->handCount[i] == origG->handCount[i]))
-				stateSuccess = 2;
+			if(!(testG->handCount[i] == refG->handCount[i])) {
+				stateSuccess = 1;
+				printf("FAILED: testG->handCount[player = %d]: %d, refG->handCount[player = %d]: %d\n", i, testG->handCount[i], i, refG->handCount[i]);
+			}
 		}
 
 		for(i = 0; i < testG->numPlayers; i++) {
-			if(!(testG->deckCount[i] == origG->deckCount[i]))
-				stateSuccess = 2;
+			if(!(testG->deckCount[i] == refG->deckCount[i])) {
+				stateSuccess = 1;
+				printf("FAILED: testG->deckCount[player = %d]: %d, refG->deckCount[player = %d]: %d\n", i, testG->deckCount[i], i, refG->deckCount[i]);
+			}
+		}
+
+		for(i = 0; i < testG->playedCardCount; i++) {
+			if(!(testG->playedCards[i] == refG->playedCards[i])) {
+				stateSuccess = 1;
+				printf("FAILED: testG->playedCards[%d]: %d, refG->playedCards[%d]: %d\n", i, testG->playedCards[i], i, refG->playedCards[i]);
+			}
 		}
 
 		for(i = 0; i < testG->numPlayers; i++) {
-			if(!(testG->discardCount[i] == origG->discardCount[i]))
-				stateSuccess = 2;
+			if(!(testG->discardCount[i] == refG->discardCount[i])) {
+				stateSuccess = 1;
+				printf("FAILED: testG->discardCount[player = %d]: %d, refG->discardCount[player = %d]: %d\n", i, testG->discardCount[i], i, refG->discardCount[i]);
+			}
 		}
 
+		// Tier 3
 		if(stateSuccess == 0) {
 			for(i = 0; i < testG->numPlayers; i++) {
 				for(j = 0; j < testG->handCount[i]; j++) {
-					if(!(testG->hand[i][j] == origG->hand[i][j]))
-						stateSuccess = 3;
+					if(!(testG->hand[i][j] == refG->hand[i][j])) {
+						stateSuccess = 1;
+						printf("FAILED: testG->hand[player = %d][%d]: %d, refG->hand[player = %d][%d]: %d\n", i, j, testG->hand[i][j], i, j, refG->hand[i][j]);
+					}
 				}
 			}
 
 			for(i = 0; i < testG->numPlayers; i++) {
 				for(j = 0; j < testG->deckCount[i]; j++) {
-					if(!(testG->deck[i][j] == origG->deck[i][j]))
-						stateSuccess = 3;
+					if(!(testG->deck[i][j] == refG->deck[i][j])) {
+						stateSuccess = 1;
+						printf("FAILED: testG->deck[player = %d][%d]: %d, refG->deck[player = %d][%d]: %d\n", i, j, testG->deck[i][j], i, j, refG->deck[i][j]);
+					}
 				}
 			}
 
 			for(i = 0; i < testG->numPlayers; i++) {
 				for(j = 0; j < testG->discardCount[i]; j++) {
-					if(!(testG->discard[i][j] == origG->discard[i][j]))
-						stateSuccess = 3;
+					if(!(testG->discard[i][j] == refG->discard[i][j])) {
+						stateSuccess = 1;
+						printf("FAILED: testG->discard[player = %d][%d]: %d, refG->discard[player = %d][%d]: %d\n", i, j, testG->discard[i][j], i, j, refG->discard[i][j]);
+					}
 				}
 			}
 		}
@@ -169,38 +192,15 @@ int compareGameStates(struct gameState* testG, struct gameState* origG) {
 }
 
 
-/*************************************************************************
-* Name: printTestResult
-*
-* Description: 
-*
-*************************************************************************/
-void printTestResult(int value) {
-	switch(value) {
-		case 0:
-			printf("	Gamestate Comparison ---> " GRN "PASSED\n\n" RESET);
-			break;
-		case 1:
-			printf("	Gamestate Comparison ---> " RED "FAILED: TIER 1\n\n" RESET);
-			break;
-		case 2:
-			printf("	Gamestate Comparison ---> " RED "FAILED: TIER 2\n\n" RESET);
-			break;
-		case 3:
-			printf("	Gamestate Comparison --->  " RED "FAILED: TIER 3\n\n" RESET);
-			break;
-	}//switch
-}
-
 /****************************************************************************************/
 /************************************* MAIN *********************************************/
 /****************************************************************************************/
 
 int main() {
 
-	int bonusCoins, i, passResult;
+	int bonusCoins, i;
 
-	int allSuccess = 0;
+	int allSuccess = 0, testSuccess = 0;
 	int seed = 123;
 	int numPlayers = 2;
 	int maxBonus = 5;
@@ -208,16 +208,16 @@ int main() {
 	struct gameState regGame, testGame;
 	int useCards[10] = {adventurer, gardens, embargo, village, minion, mine, cutpurse, sea_hag, tribute, smithy};
 
-	printf("Beginning \"%s\" test\n", TESTFUNC);
-
 	initializeGame(numPlayers, useCards, seed, &testGame);
 	memcpy(&regGame, &testGame, sizeof(struct gameState));
 
-	// printf(YEL ">>>>>>>>>>>>>>>>>> " CYN "BEGINNING TEST FOR FUNCTION \"%s\"" RESET YEL " <<<<<<<<<<<<<<<<<\n" RESET, TESTFUNC);
-	// printf(YEL ">>>>>>>>>>>>>>>>>>>>>>> " CYN "Testing with 5 cards in hand" RESET YEL " <<<<<<<<<<<<<<<<<<<<<<<<<\n" RESET);
+	printf("***************************************************************************\n");
+	printf("********************** BEGINNING \"%s\" TEST ***********************\n", TESTFUNC);
+	printf("***************************************************************************\n\n");
 
 	/****************************************************************************************/
 	/****************************************************************************************/
+	printf("Testing with set hand and iterating through bonus from 0 to 10...\n\n");
 	// Set the hand ---> All copper
 	testGame.hand[currentPlayer][0] = copper;
 	testGame.hand[currentPlayer][1] = copper;
@@ -231,22 +231,33 @@ int main() {
 	regGame.hand[currentPlayer][3] = copper;
 	regGame.hand[currentPlayer][4] = copper;
 
+
 	for(i = 0; i < maxBonus; i++) {
 		bonusCoins = i;
 		updateCoins(currentPlayer, &testGame, bonusCoins);
 
 		if(PRINT)
-			printf("Hand: C C C C C + bonus of %d ---> ", bonusCoins);
-		if(assertTrue(testGame.coins, 5 + bonusCoins) && allSuccess == 0)
+			printf("Hand: C C C C C + bonus of %d ---> 			", bonusCoins);
+		if(assertTrue(testGame.coins, 5 + bonusCoins) && allSuccess == 0) {
 			allSuccess = 1;
+			testSuccess = 1;
+		}
 
 		// Make sure that the rest of the gamestate has not changed
-		passResult = compareGameStates(&testGame, &regGame);
-
-		if(PRINT) {
-			printTestResult(passResult);
+		if(compareGameStates(&testGame, &regGame)) {
+    		allSuccess = 1;
+    		testSuccess = 1;
 		}
+
 	}//for
+
+
+    if(testSuccess == 0) { 
+    	printf("All copper in hand			--->	PASSED\n");
+    }
+    else {
+    	printf("All copper in hand			--->	FAILED\n");
+    }
 
 
 	/****************************************************************************************/
@@ -264,22 +275,34 @@ int main() {
 	regGame.hand[currentPlayer][3] = silver;
 	regGame.hand[currentPlayer][4] = silver;
 
+	testSuccess = 0;
+
 	for(i = 0; i < maxBonus; i++) {
 		bonusCoins = i;
 		updateCoins(currentPlayer, &testGame, bonusCoins);
 
 		if(PRINT)
 			printf("Hand: S S S S S + bonus of %d ---> ", bonusCoins);
-		if(assertTrue(testGame.coins, 10 + bonusCoins) && allSuccess == 0)
+		if(assertTrue(testGame.coins, 10 + bonusCoins) && allSuccess == 0) {
 			allSuccess = 1;
+			testSuccess = 1;
+		}
 
 		// Make sure that the rest of the gamestate has not changed
-		passResult = compareGameStates(&testGame, &regGame);
-
-		if(PRINT) {
-			printTestResult(passResult);
+		if(compareGameStates(&testGame, &regGame)) {
+    		allSuccess = 1;
+    		testSuccess = 1;
 		}
-	}
+
+	}//for
+
+
+    if(testSuccess == 0) { 
+    	printf("All silver in hand			--->	PASSED\n");
+    }
+    else {
+    	printf("All silver in hand			--->	FAILED\n");
+    }
 
 
 	/****************************************************************************************/
@@ -297,21 +320,34 @@ int main() {
 	regGame.hand[currentPlayer][3] = gold;
 	regGame.hand[currentPlayer][4] = gold;
 
+	testSuccess = 0;
+
 	for(i = 0; i < maxBonus; i++) {
 		bonusCoins = i;
 		updateCoins(currentPlayer, &testGame, bonusCoins);
 
 		if(PRINT)
 			printf("Hand: G G G G G + bonus of %d ---> ", bonusCoins);
-		if(assertTrue(testGame.coins, 15 + bonusCoins) && allSuccess == 0)
+		if(assertTrue(testGame.coins, 15 + bonusCoins) && allSuccess == 0) {
 			allSuccess = 1;
-
-		passResult = compareGameStates(&testGame, &regGame);
-
-		if(PRINT) {
-			printTestResult(passResult);
+			testSuccess = 1;
 		}
-	}
+
+		// Make sure that the rest of the gamestate has not changed
+		if(compareGameStates(&testGame, &regGame)) {
+    		allSuccess = 1;
+    		testSuccess = 1;
+		}
+
+	}//for
+
+
+    if(testSuccess == 0) { 
+    	printf("All gold in hand			--->	PASSED\n");
+    }
+    else {
+    	printf("All gold in hand			--->	FAILED\n");
+    }
 
 
 	/****************************************************************************************/
@@ -329,22 +365,34 @@ int main() {
 	regGame.hand[currentPlayer][3] = estate;
 	regGame.hand[currentPlayer][4] = estate;
 
+	testSuccess = 0;
+
 	for(i = 0; i < maxBonus; i++) {
 		bonusCoins = i;
 		updateCoins(currentPlayer, &testGame, bonusCoins);
 
 		if(PRINT)
 			printf("Hand: C S G E E + bonus of %d ---> ", bonusCoins);
-		if(assertTrue(testGame.coins, 6 + bonusCoins) && allSuccess == 0)
+		if(assertTrue(testGame.coins, 6 + bonusCoins) && allSuccess == 0) {
 			allSuccess = 1;
+			testSuccess = 1;
+		}
 
 		// Make sure that the rest of the gamestate has not changed
-		passResult = compareGameStates(&testGame, &regGame);
-
-		if(PRINT) {
-			printTestResult(passResult);
+		if(compareGameStates(&testGame, &regGame)) {
+    		allSuccess = 1;
+    		testSuccess = 1;
 		}
-	}
+
+	}//for
+
+
+    if(testSuccess == 0) { 
+    	printf("One of each coin in hand 	--->	PASSED\n");
+    }
+    else {
+    	printf("One of each coin in hand	--->	FAILED\n");
+    }
 
 
 	/****************************************************************************************/
@@ -362,28 +410,45 @@ int main() {
 	regGame.hand[currentPlayer][3] = estate;
 	regGame.hand[currentPlayer][4] = minion;
 
+	testSuccess = 0;
+
 	for(i = 0; i < maxBonus; i++) {
 		bonusCoins = i;
 		updateCoins(currentPlayer, &testGame, bonusCoins);
 
 		if(PRINT)
 			printf("Hand: Cur D P E K + bonus of %d ---> ", bonusCoins);
-		if(assertTrue(testGame.coins, 0 + bonusCoins) && allSuccess == 0)
+		if(assertTrue(testGame.coins, 0 + bonusCoins) && allSuccess == 0) {
 			allSuccess = 1;
+			testSuccess = 1;
+		}
 
 		// Make sure that the rest of the gamestate has not changed
-		passResult = compareGameStates(&testGame, &regGame);
-
-		if(PRINT) {
-			printTestResult(passResult);
+		if(compareGameStates(&testGame, &regGame)) {
+    		allSuccess = 1;
+    		testSuccess = 1;
 		}
-	}
 
+	}//for
+
+
+    if(testSuccess == 0) { 
+    	printf("No coins in hand			--->	PASSED\n");
+    }
+    else {
+    	printf("No coins in hand			--->	FAILED\n");
+    }
+
+    printf("\n");
+
+	printf("**************************************************\n");
 	// All tests have completed, print out if all were successful, or if there was any failures.
 	if(allSuccess == 0)
-		printf("SUCCESS -- All Tests Passed\n");
+		printf("\"%s\" unit test		---> 	PASSED\n", TESTFUNC);
 	else
-		printf("FAIL -- At Least One Case Failed\n");
+		printf("\"%s\" unit test		---> 	FAILED\n", TESTFUNC);
+	printf("**************************************************\n");
+	printf("\n");
 
 	return 0;
 }

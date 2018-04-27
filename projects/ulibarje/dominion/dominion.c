@@ -748,6 +748,13 @@ void baronEffect(struct gameState* state, int curPlayer, int choice) {
            ***************************************************************************/
           state->supplyCount[estate]--; //Decrement estates
           if (supplyCount(estate, state) == 0) {
+           /***************************************************************************
+           ***************************************************************************
+           * BUG FOUND HERE!!!! this function calls "isGameOver", "isGameOver" returns
+           *  a 1 if the game is over, zero otherwise, but baron card does not do
+           *  anything with the return value.
+           ***************************************************************************
+           ***************************************************************************/
             isGameOver(state);
           }
         }

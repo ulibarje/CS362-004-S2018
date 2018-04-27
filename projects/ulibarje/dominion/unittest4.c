@@ -61,103 +61,123 @@ int assertTrue(int test, int expect) {
 *	checked in the test case, and thus, do not need to be tested again.
 *
 *************************************************************************/
-int compareGameStates(struct gameState* testG, struct gameState* origG) {
+int compareGameStates(struct gameState* testG, struct gameState* refG) {
 
 	int i, j;
 	int stateSuccess = 0;
 
 	// Tier 1
-	if(!(testG->numPlayers == origG->numPlayers)) {
+	if(!(testG->numPlayers == refG->numPlayers)) {
 		stateSuccess = 1;
-		printf("testG->numPlayers: %d, origG->numPlayers: %d\n", testG->numPlayers, origG->numPlayers);
+		printf("FAILED: testG->numPlayers: %d, refG->numPlayers: %d\n", testG->numPlayers, refG->numPlayers);
+		
 	}
 
 	for(i = 0; i < treasure_map + 1; i++) {
-		if(!(testG->supplyCount[i] == origG->supplyCount[i])) {
-			stateSuccess = 1;
-			printf("testG->supplyCount[%d]: %d, origG->supplyCount[%d]: %d\n", i, testG->supplyCount[i], i, origG->supplyCount[i]);
+		if(!(testG->supplyCount[i] == refG->supplyCount[i])) {
+		stateSuccess = 1;
+			printf("FAILED: testG->supplyCount[%d]: %d, refG->supplyCount[%d]: %d\n", i, testG->supplyCount[i], i, refG->supplyCount[i]);
 		}
 	}
 
 	for(i = 0; i < treasure_map + 1; i++) {
-		if(!(testG->embargoTokens[i] == origG->embargoTokens[i])) {
-			stateSuccess = 1;
-			printf("testG->embargoTokens[%d]: %d, origG->embargoTokens[%d]: %d\n", i, testG->embargoTokens[i], i, origG->embargoTokens[i]);
+		if(!(testG->embargoTokens[i] == refG->embargoTokens[i])) {
+		stateSuccess = 1;
+			printf("FAILED: testG->embargoTokens[%d]: %d, refG->embargoTokens[%d]: %d\n", i, testG->embargoTokens[i], i, refG->embargoTokens[i]);
 		}
 	}
 
-	if(!(testG->outpostPlayed == origG->outpostPlayed)) {
+	if(!(testG->outpostPlayed == refG->outpostPlayed)) {
 		stateSuccess = 1;
-		printf("testG->outpostPlayed: %d, origG->outpostPlayed: %d\n", testG->outpostPlayed, origG->outpostPlayed);
+		printf("FAILED: testG->outpostPlayed: %d, refG->outpostPlayed: %d\n", testG->outpostPlayed, refG->outpostPlayed);
 	}
 
-	if(!(testG->whoseTurn == origG->whoseTurn)) {
+	if(!(testG->whoseTurn == refG->whoseTurn)) {
 		stateSuccess = 1;
-		printf("testG->whoseTurn: %d, origG->whoseTurn: %d\n", testG->whoseTurn, origG->whoseTurn);
+		printf("FAILED: testG->whoseTurn: %d, refG->whoseTurn: %d\n", testG->whoseTurn, refG->whoseTurn);
 	}
 
-	if(!(testG->phase == origG->phase)) {
+	if(!(testG->phase == refG->phase)) {
 		stateSuccess = 1;
-		printf("testG->phase: %d, origG->phase: %d\n", testG->phase, origG->phase);
+		printf("FAILED: testG->phase: %d, refG->phase: %d\n", testG->phase, refG->phase);
 	}
 
-	if(!(testG->numActions == origG->numActions)) {
+	if(!(testG->numActions == refG->numActions)) {
 		stateSuccess = 1;
-		printf("testG->numActions: %d, origG->numActions: %d\n", testG->numActions, origG->numActions);
+		printf("FAILED: testG->numActions: %d, refG->numActions: %d\n", testG->numActions, refG->numActions);
 	}
 
-	if(!(testG->coins == origG->coins)) {
+	if(!(testG->coins == refG->coins)) {
 		stateSuccess = 1;
-		printf("testG->coins: %d, origG->coins: %d\n", testG->coins, origG->coins);
+		printf("FAILED: testG->coins: %d, refG->coins: %d\n", testG->coins, refG->coins);
 	}
 
-	if(!(testG->numBuys == origG->numBuys)) {
+	if(!(testG->numBuys == refG->numBuys)) {
 		stateSuccess = 1;
-		printf("testG->numBuys: %d, origG->numBuys: %d\n", testG->numBuys, origG->numBuys);
+		printf("FAILED: testG->numBuys: %d, refG->numBuys: %d\n", testG->numBuys, refG->numBuys);
 	}
 
-	if(!(testG->playedCardCount == origG->playedCardCount)) {
+	if(!(testG->playedCardCount == refG->playedCardCount)) {
 		stateSuccess = 1;
-		printf("testG->playedCardCount: %d, origG->playedCardCount: %d\n", testG->playedCardCount, origG->playedCardCount);
+		printf("FAILED: testG->playedCardCount: %d, refG->playedCardCount: %d\n", testG->playedCardCount, refG->playedCardCount);
 	}
 
 	// Tier 2
 	if(stateSuccess == 0) {
 		for(i = 0; i < testG->numPlayers; i++) {
-			if(!(testG->handCount[i] == origG->handCount[i]))
-				stateSuccess = 2;
+			if(!(testG->handCount[i] == refG->handCount[i])) {
+				stateSuccess = 1;
+				printf("FAILED: testG->handCount[player = %d]: %d, refG->handCount[player = %d]: %d\n", i, testG->handCount[i], i, refG->handCount[i]);
+			}
 		}
 
 		for(i = 0; i < testG->numPlayers; i++) {
-			if(!(testG->deckCount[i] == origG->deckCount[i]))
-				stateSuccess = 2;
+			if(!(testG->deckCount[i] == refG->deckCount[i])) {
+				stateSuccess = 1;
+				printf("FAILED: testG->deckCount[player = %d]: %d, refG->deckCount[player = %d]: %d\n", i, testG->deckCount[i], i, refG->deckCount[i]);
+			}
+		}
+
+		for(i = 0; i < testG->playedCardCount; i++) {
+			if(!(testG->playedCards[i] == refG->playedCards[i])) {
+				stateSuccess = 1;
+				printf("FAILED: testG->playedCards[%d]: %d, refG->playedCards[%d]: %d\n", i, testG->playedCards[i], i, refG->playedCards[i]);
+			}
 		}
 
 		for(i = 0; i < testG->numPlayers; i++) {
-			if(!(testG->discardCount[i] == origG->discardCount[i]))
-				stateSuccess = 2;
+			if(!(testG->discardCount[i] == refG->discardCount[i])) {
+				stateSuccess = 1;
+				printf("FAILED: testG->discardCount[player = %d]: %d, refG->discardCount[player = %d]: %d\n", i, testG->discardCount[i], i, refG->discardCount[i]);
+			}
 		}
 
 		// Tier 3
 		if(stateSuccess == 0) {
 			for(i = 0; i < testG->numPlayers; i++) {
 				for(j = 0; j < testG->handCount[i]; j++) {
-					if(!(testG->hand[i][j] == origG->hand[i][j]))
-						stateSuccess = 3;
+					if(!(testG->hand[i][j] == refG->hand[i][j])) {
+						stateSuccess = 1;
+						printf("FAILED: testG->hand[player = %d][%d]: %d, refG->hand[player = %d][%d]: %d\n", i, j, testG->hand[i][j], i, j, refG->hand[i][j]);
+					}
 				}
 			}
 
 			for(i = 0; i < testG->numPlayers; i++) {
 				for(j = 0; j < testG->deckCount[i]; j++) {
-					if(!(testG->deck[i][j] == origG->deck[i][j]))
-						stateSuccess = 3;
+					if(!(testG->deck[i][j] == refG->deck[i][j])) {
+						stateSuccess = 1;
+						printf("FAILED: testG->deck[player = %d][%d]: %d, refG->deck[player = %d][%d]: %d\n", i, j, testG->deck[i][j], i, j, refG->deck[i][j]);
+					}
 				}
 			}
 
 			for(i = 0; i < testG->numPlayers; i++) {
 				for(j = 0; j < testG->discardCount[i]; j++) {
-					if(!(testG->discard[i][j] == origG->discard[i][j]))
-						stateSuccess = 3;
+					if(!(testG->discard[i][j] == refG->discard[i][j])) {
+						stateSuccess = 1;
+						printf("FAILED: testG->discard[player = %d][%d]: %d, refG->discard[player = %d][%d]: %d\n", i, j, testG->discard[i][j], i, j, refG->discard[i][j]);
+					}
 				}
 			}
 		}
@@ -173,36 +193,6 @@ int compareGameStates(struct gameState* testG, struct gameState* origG) {
 }
 
 
-/*************************************************************************
-* Name: printTestResult
-*
-* Description: 
-*
-*************************************************************************/
-void printTestResult(int value) {
-	switch(value) {
-		case 0:
-			printf("	Gamestate Comparison ---> " GRN "PASSED\n\n" RESET);
-			break;
-		case 1:
-			printf("	Gamestate Comparison ---> " RED "FAILED: TIER 1\n\n" RESET);
-			break;
-		case 2:
-			printf("	Gamestate Comparison ---> " RED "FAILED: TIER 2\n\n" RESET);
-			break;
-		case 3:
-			printf("	Gamestate Comparison --->  " RED "FAILED: TIER 3\n\n" RESET);
-			break;
-	}//switch
-}
-
-
-void printHand(struct gameState* G) {
-	int i;
-	for(i = 0; i < G->handCount[G->whoseTurn]; i++) {
-		printf("Card %d: %d\n", i, G->hand[G->whoseTurn][i]);
-	}
-}
 
 /****************************************************************************************/
 /************************************* MAIN *********************************************/
@@ -210,10 +200,9 @@ void printHand(struct gameState* G) {
 
 int main() {
 
-	int card, numCards, randCard, passResult, test, toTrash;
+	int card, numCards, randCard, toTrash;
 
-	int numTests = 1;
-	int allSuccess = 0;
+	int allSuccess = 0, testSuccess = 0;
 	int seed = 123;
 	int numPlayers = 2;
 	int player = 0;
@@ -223,76 +212,93 @@ int main() {
 
 	srand(time(NULL));
 
-	printf("============= Beginning \"%s\" test =============\n", TESTFUNC);
+	printf("***************************************************************************\n");
+	printf("********************** BEGINNING \"%s\" TEST ***********************\n", TESTFUNC);
+	printf("***************************************************************************\n\n");
+
+	printf("Description:\n");
+	printf("Test initializes a game with a variable number of random cards to start. We start\n");
+	printf("with 1 card in hand, run the discard card test, re-initialize game with 2 random\n");
+	printf("cards in hand, and re-run the discard test. This is repeated up to 10 cards in\n");
+	printf("hand, and then starts over. The second time around, the cards are trashed instead\n");
+	printf("of simply discarding them. The test manually discards or trashes the card using\n");
+	printf("a reference gamestate, and then compares the entire gamestate to the test gamestate\n");
+	printf("that used the \"discardCard\" function\n\n");
 
 	/****************************************************************************************/
 	/****************************************************************************************/
 	for(toTrash = 0; toTrash < 2; toTrash++) {
-		for(test = 0; test < numTests; test++) {
-			for(numCards = 1; numCards <= maxCards; numCards++) {
-				// printf("Number of cards: %d, test number: %d, toTrash: %d\n", numCards, test, toTrash);
 
-				memset(&testGame, '\0', sizeof(struct gameState));
-				initializeGame(numPlayers, useCards, seed, &testGame);
-				testGame.handCount[player] = 0;
-				for(card = 0; card < numCards; card++) {
-					do {
-						randCard = rand() % treasure_map;
-					} while(testGame.supplyCount[randCard] != -1);
+		if(toTrash)
+			printf("Testing \"%s\" with \"toTrash\" option ON...\n", TESTFUNC);
+		else
+			printf("Testing \"%s\" with \"toTrash\" option OFF...\n", TESTFUNC);
 
-					testGame.hand[player][card] = randCard;
-					testGame.handCount[player]++;
-				}
-				memcpy(&regGame, &testGame, sizeof(struct gameState));
+		for(numCards = 1; numCards <= maxCards; numCards++) {
+			// printf("Number of cards: %d, test number: %d, toTrash: %d\n", numCards, test, toTrash);
 
-				for(card = 0; card < numCards; card++) {
+			memset(&testGame, '\0', sizeof(struct gameState));
+			initializeGame(numPlayers, useCards, seed, &testGame);
+			testGame.handCount[player] = 0;
+			for(card = 0; card < numCards; card++) {
+				do {
+					randCard = rand() % treasure_map;
+				} while(testGame.supplyCount[randCard] != -1);
 
-					// printf("========== Original Hand =============\n");
-					// printHand(&regGame);
-					// printf("========== Test Hand =============\n");
-					// printHand(&testGame);
-					// printf("\n");
+				testGame.hand[player][card] = randCard;
+				testGame.handCount[player]++;
+			}
+			memcpy(&regGame, &testGame, sizeof(struct gameState));
+			testSuccess = 0;
 
-					randCard = rand() % testGame.handCount[player];
-					discardCard(randCard, player, &testGame, toTrash); // The function-under-test
+			for(card = 0; card < numCards; card++) {
 
-					// Manually discard the same card from our reference game so that we can compare
-					// the two gamestates to determine if the function is working correctly.
-					if(toTrash == 0) {
-			      		regGame.playedCards[regGame.playedCardCount] = regGame.hand[player][randCard]; 
-			      		regGame.playedCardCount++;
-			      	}
+				randCard = rand() % testGame.handCount[player];
+				discardCard(randCard, player, &testGame, toTrash); // The function-under-test
 
-					regGame.hand[player][randCard] = -1;
-				  	if (randCard == (regGame.handCount[player] - 1)) {
-				      	regGame.handCount[player]--;
-				    }
-				  	else {
-				      regGame.hand[player][randCard] = regGame.hand[player][(regGame.handCount[player] - 1)];
-				      regGame.hand[player][regGame.handCount[player] - 1] = -1;
-				      regGame.handCount[player]--;
-				    }
+				// Manually discard the same card from our reference game so that we can compare
+				// the two gamestates to determine if the function is working correctly.
+				if(toTrash == 0) {
+		      		regGame.playedCards[regGame.playedCardCount] = regGame.hand[player][randCard]; 
+		      		regGame.playedCardCount++;
+		      	}
 
-				    // Compare the two game states and make sure that they are the same
-				    passResult = compareGameStates(&testGame, &regGame);
-				    if(passResult != 0) { allSuccess = 1; }
-				    else {
-				    	printf("discardCard - PASSED: discarded position %d out of %d cards\n", randCard, testGame.handCount[player] + 1);
-				    }
+				regGame.hand[player][randCard] = -1;
+			  	if (randCard == (regGame.handCount[player] - 1)) {
+			      	regGame.handCount[player]--;
+			    }
+			  	else {
+			      regGame.hand[player][randCard] = regGame.hand[player][(regGame.handCount[player] - 1)];
+			      regGame.hand[player][regGame.handCount[player] - 1] = -1;
+			      regGame.handCount[player]--;
+			    }
 
-					if(PRINT) {
-						printTestResult(passResult);
-					}
-				}
+			    // Compare the two game states and make sure that they are the same
+			    if(compareGameStates(&testGame, &regGame)) {
+			    	allSuccess = 1;
+			    	testSuccess = 1;
+			    }
+			}
+
+			if(testSuccess == 0) { 
+		    	printf("Test with %d cards	--->	PASSED\n", numCards);
+		    }
+		    else {
+		    	printf("Test with %d cards	--->	FAILED\n", numCards);
 			}
 		}
+
+		printf("\n");
 	}
 
+	printf("**************************************************\n");
 	// All tests have completed, print out if all were successful, or if there was any failures.
 	if(allSuccess == 0)
-		printf("SUCCESS -- All Tests Passed\n");
+		printf("\"%s\" unit test		---> 	PASSED\n", TESTFUNC);
 	else
-		printf("FAIL -- At Least One Case Failed\n");
+		printf("\"%s\" unit test		---> 	FAILED\n", TESTFUNC);
+	printf("**************************************************\n");
+	printf("\n");
 
 	return 0;
 }

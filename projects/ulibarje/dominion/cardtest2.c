@@ -33,12 +33,12 @@
 *************************************************************************/
 int assertTrue(int test, int expect) {
 	if(test == expect) {
-			printf("TEST PASSED ");
-			printf("Test: %d, Expected: %d\n", test, expect);
+			printf("PASSED\n");
+			// printf("Test: %d, Expected: %d\n", test, expect);
 		return 0;
 	}
 	else {
-			printf("TEST FAILED ");
+			printf("FAILED ");
 			printf("Test: %d, Expected: %d\n", test, expect);
 		return 1;
 	}
@@ -203,7 +203,9 @@ int main() {
 	struct gameState refGame, testGame;
 	int useCards[10] = {adventurer, gardens, embargo, village, minion, mine, cutpurse, sea_hag, tribute, smithy};
 
-	printf("\n====================== Beginning \"%s\" test ======================\n", TESTCARD);
+	printf("***************************************************************************\n");
+	printf("*********************** BEGINNING \"%s\" TEST ***********************\n", TESTCARD);
+	printf("***************************************************************************\n\n");
 
 	initializeGame(numPlayers, useCards, seed, &refGame);
 	refGame.hand[player][handPos] = adventurer;
@@ -211,26 +213,28 @@ int main() {
 
 	cardEffect(adventurer, choice1, choice2, choice3, &testGame, handPos, &bonus);
 
-	printf("Testing handCount ---> ");
+	printf("\n");
+	printf("Testing handCount								--->	");
 	if(assertTrue(testGame.handCount[player], refGame.handCount[player] + numDraws - numDiscards)) {
 		allPassed = 1;
 	}
-	printf("Testing playedCardCount ---> ");
+	printf("Testing if new cards are coins					--->	")
+	printf("Testing playedCardCount							--->	");
 	if(assertTrue(testGame.playedCardCount, refGame.playedCardCount + 1)) {
 		allPassed = 1;
 	}
-	printf("Check that %s is in playedCards pile ---> ", TESTCARD);
+	printf("Check that %s is in playedCards pile	--->	", TESTCARD);
 	if(testGame.playedCardCount > 0) {
 		i = 0;
 		if(i < testGame.playedCardCount) {
 			if(testGame.playedCards[i] == adventurer) {
-				printf("PASSED: Found \"%s\" in playedCards pile\n", TESTCARD);
+				printf("PASSED\n");
 			}
 			else
 				i++;
 		}
 		else {
-			printf("FAILED: Did not find \"%s\" in playedCards pile\n", TESTCARD);
+			printf("FAILED\n");
 			allPassed = 1;
 		}
 	}
@@ -238,18 +242,21 @@ int main() {
 		printf("FAILED: No cards in playedCard pile\n");
 
 	// Compare the two game states and make sure that they are the same
-	printf("Gamestate comparison of non-involved parameters ---> ");
+	printf("Gamestate comparison of non-involved parameters	--->	");
     if(compareGameStates(&testGame, &refGame))
     	allPassed = 1;
     else
     	printf("PASSED\n");
 
-    if(allPassed == 0) { 
-    	printf("-------> \"%s\" test - PASSED\n\n", TESTCARD);
-    }
-    else {
-    	printf("-------> \"%s\" test - FAILED\n\n", TESTCARD);
-    }
+    printf("\n");
+    printf("**************************************************\n");
+	// All tests have completed, print out if all were successful, or if there was any failures.
+	if(allPassed == 0)
+		printf("\"%s\" unit test		---> 	PASSED\n", TESTCARD);
+	else
+		printf("\"%s\" unit test		---> 	FAILED\n", TESTCARD);
+	printf("**************************************************\n");
+	printf("\n");
 
 	return 0;
 }
