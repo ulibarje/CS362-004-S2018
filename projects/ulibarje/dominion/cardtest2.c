@@ -187,6 +187,14 @@ int compareGameStates(struct gameState* testG, struct gameState* refG) {
 	return stateSuccess;
 }
 
+
+void printHand(struct gameState* G) {
+	int i;
+	for(i = 0; i < G->handCount[G->whoseTurn]; i++) {
+		printf("Card %d: %d\n", i, G->hand[G->whoseTurn][i]);
+	}
+}
+
 /****************************************************************************************/
 /************************************* MAIN *********************************************/
 /****************************************************************************************/
@@ -219,6 +227,16 @@ int main() {
 		allPassed = 1;
 	}
 	printf("Testing if new cards are coins					--->	");
+	int card1 = testGame.hand[player][testGame.handCount[player] - 1];
+	int card2 = testGame.hand[player][testGame.handCount[player] - 2];
+
+	if(((card1 == copper) || (card1 == silver) || (card1 == gold)) && ((card2 == copper) || (card2 == silver) || (card2 == gold))) {
+		printf("PASSED\n");
+	}
+	else {
+		allPassed = 1;
+		printf("FAILED\n");
+	}
 	printf("Testing playedCardCount							--->	");
 	if(assertTrue(testGame.playedCardCount, refGame.playedCardCount + 1)) {
 		allPassed = 1;
