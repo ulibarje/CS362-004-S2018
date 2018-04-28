@@ -775,6 +775,12 @@ void baronEffect(struct gameState* state, int curPlayer, int choice) {
       }
     }
   }
+  /***************************************************************************
+   ***************************************************************************
+   * BUG FOUND HERE!!!! "discard" function is not called here, so the baron
+   * card is not displayed in the "played cards" list when it is played. 
+   ***************************************************************************
+   ***************************************************************************/
 }
 
 
