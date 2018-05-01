@@ -3,9 +3,14 @@
 #include<stdlib.h>
 #include<time.h>
 
+#define UPPER_CHAR		'~'
+#define LOWER_CHAR		' '
+#define UPPER_STR_CHAR	't'
+#define LOWER_STR_CHAR	'e'
+
 char inputChar()
 {
-    return (rand() % 94) + 32;
+    return (rand() % (UPPER_CHAR - LOWER_CHAR + 1)) + LOWER_CHAR;
 }
 
 char *inputString()
@@ -15,7 +20,7 @@ char *inputString()
 
 	int i;
 	for(i = 0; i < 5; i++) {
-		str[i] = (rand() % 16) + 101;
+		str[i] = (rand() % (UPPER_STR_CHAR - LOWER_STR_CHAR + 1)) + LOWER_STR_CHAR;
 	}
 
     return str;
