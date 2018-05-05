@@ -52,7 +52,7 @@ void testme()
     tcCount++;
     c = inputChar();
     s = inputString();
-    printf("Iteration %d: c = %c, s = %s, state = %d\n", tcCount, c, s, state);
+    // printf("Iteration %d: c = %c, s = %s, state = %d\n", tcCount, c, s, state);
 
     if (c == '[' && state == 0) state = 1;
     if (c == '(' && state == 1) state = 2;
@@ -68,13 +68,13 @@ void testme()
        && s[4] == 't' && s[5] == '\0'
        && state == 9)
     {
-      // printf("\nIteration %d: c = %c, s = %s, state = %d\n", tcCount, c, s, state);
+      printf("\nIteration %d: c = %c, s = %s, state = %d\n", tcCount, c, s, state);
 
       elapsedTime = currentTime - startTime;
       timeinfo = localtime(&elapsedTime);
       printf("Execution took %d minutes and %d seconds to complete.\n", timeinfo->tm_min, timeinfo->tm_sec);
 
-      printf("error ");
+      printf("error \n");
       exit(200);
     }
   }
