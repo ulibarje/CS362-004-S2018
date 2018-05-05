@@ -3,10 +3,12 @@
 #include<stdlib.h>
 #include<time.h>
 
-#define UPPER_CHAR		'~'
 #define LOWER_CHAR		' '
-#define UPPER_STR_CHAR	't'
-#define LOWER_STR_CHAR	'e'
+#define UPPER_CHAR		'~'
+#define LOWER_STR_CHAR	'a'
+#define UPPER_STR_CHAR	'z'
+
+#define MAX_TEST_TIME	5
 
 char inputChar()
 {
@@ -32,8 +34,21 @@ void testme()
   char *s;
   char c;
   int state = 0;
-  while (1)
+
+  time_t startTime;
+  time_t currentTime;
+  time_t elapsedTime;
+  time_t endTime;
+
+  struct tm* timeinfo;
+
+  time(&startTime);
+  time(&currentTime);
+  endTime = startTime + MAX_TEST_TIME * 60;
+
+  while (currentTime < endTime)
   {
+  	time(&currentTime);
     tcCount++;
     c = inputChar();
     s = inputString();
@@ -53,10 +68,18 @@ void testme()
        && s[4] == 't' && s[5] == '\0'
        && state == 9)
     {
+      // printf("\nIteration %d: c = %c, s = %s, state = %d\n", tcCount, c, s, state);
+
+      elapsedTime = currentTime - startTime;
+      timeinfo = localtime(&elapsedTime);
+      printf("Execution took %d minutes and %d seconds to complete.\n", timeinfo->tm_min, timeinfo->tm_sec);
+
       printf("error ");
       exit(200);
     }
   }
+  printf("Test exceeded the max time of %d minute. Aborting test.\n", MAX_TEST_TIME);
+  exit(100);
 }
 
 
