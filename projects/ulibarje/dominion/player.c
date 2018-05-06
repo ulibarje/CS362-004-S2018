@@ -126,6 +126,7 @@ int main(int argc, char* argv[]) {
 		printf("$ ");
 		fgets(line, MAX_STRING_LENGTH, stdin);
 		sscanf(line, "%s %d %d %d %d", command, &arg0, &arg1, &arg2, &arg3);
+		// printf("Read - cmd: %s, arg0: %d, arg1: %d, arg2: %d, arg3: %d\n", command, arg0, arg1, arg2, arg3);
 
 
 		if(COMPARE(command, add) == 0) {
