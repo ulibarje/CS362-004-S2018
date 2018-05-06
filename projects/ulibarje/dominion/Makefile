@@ -24,10 +24,80 @@ testAll: dominion.o testSuite.c
 interface.o: interface.h interface.c
 	gcc -c interface.c -g  $(CFLAGS)
 
-runtests: testDrawCard 
-	./testDrawCard &> unittestresult.out
-	gcov dominion.c >> unittestresult.out
-	cat dominion.c.gcov >> unittestresult.out
+################################################################################################
+# For individual use
+################################################################################################
+
+unittest1: unittest1.c dominion.c rngs.c
+	gcc -o unittest1 unittest1.c dominion.c rngs.c $(CFLAGS)
+
+unittest2: unittest2.c dominion.c rngs.c
+	gcc -o unittest2 unittest2.c dominion.c rngs.c $(CFLAGS)
+
+unittest3: unittest3.c dominion.c rngs.c
+	gcc -o unittest3 unittest3.c dominion.c rngs.c $(CFLAGS)
+
+unittest4: unittest4.c dominion.c rngs.c
+	gcc -o unittest4 unittest4.c dominion.c rngs.c $(CFLAGS)
+
+cardtest1: cardtest1.c dominion.c rngs.c
+	gcc -o cardtest1 cardtest1.c dominion.c rngs.c $(CFLAGS)
+
+cardtest2: cardtest2.c dominion.c rngs.c
+	gcc -o cardtest2 cardtest2.c dominion.c rngs.c $(CFLAGS)
+
+cardtest3: cardtest3.c dominion.c rngs.c
+	gcc -o cardtest3 cardtest3.c dominion.c rngs.c $(CFLAGS)
+
+cardtest4: cardtest4.c dominion.c rngs.c
+	gcc -o cardtest4 cardtest4.c dominion.c rngs.c $(CFLAGS)
+
+################################################################################################
+
+unittestresults.out: unittest1.c unittest2.c unittest3.c unittest4.c cardtest1.c cardtest2.c cardtest3.c cardtest4.c dominion.c rngs.c
+	echo "Result for running Dominion unit tests:" > unittestresults.out
+	echo "" >> unittestresults.out
+	
+	gcc -o unittest1 unittest1.c dominion.c rngs.c $(CFLAGS)
+	unittest1 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+	echo "" >> unittestresults.out
+
+	gcc -o unittest2 unittest2.c dominion.c rngs.c $(CFLAGS)
+	unittest2 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+	echo "" >> unittestresults.out
+
+	gcc -o unittest3 unittest3.c dominion.c rngs.c $(CFLAGS)
+	unittest3 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+	echo "" >> unittestresults.out
+
+	gcc -o unittest4 unittest4.c dominion.c rngs.c $(CFLAGS)
+	unittest4 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+	echo "" >> unittestresults.out
+
+	gcc -o cardtest1 cardtest1.c dominion.c rngs.c $(CFLAGS)
+	cardtest1 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+	echo "" >> unittestresults.out
+
+	gcc -o cardtest2 cardtest2.c dominion.c rngs.c $(CFLAGS)
+	cardtest2 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+	echo "" >> unittestresults.out
+
+	gcc -o cardtest3 cardtest3.c dominion.c rngs.c $(CFLAGS)
+	cardtest3 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+	echo "" >> unittestresults.out
+
+	gcc -o cardtest4 cardtest4.c dominion.c rngs.c $(CFLAGS)
+	cardtest4 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+	echo "" >> unittestresults.out
+
 
 
 player: player.c interface.o
@@ -36,4 +106,4 @@ player: player.c interface.o
 all: playdom player 
 
 clean:
-	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
+	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe unittest1 unittest2 unittest3 unittest4 cardtest1 cardtest2 cardtest3 cardtest4

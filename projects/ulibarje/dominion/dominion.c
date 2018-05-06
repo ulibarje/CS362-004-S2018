@@ -103,26 +103,26 @@ int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
   state->supplyCount[gold] = 30;
 
   //set number of Kingdom cards
-  for (i = adventurer; i <= treasure_map; i++) {       	//loop all cards
-    for (j = 0; j < 10; j++) {           		//loop chosen cards
-      if (kingdomCards[j] == i) {
-	      //check if card is a 'Victory' Kingdom card
-	      if (kingdomCards[j] == great_hall || kingdomCards[j] == gardens) {
-    		  if (numPlayers == 2) { 
-    		    state->supplyCount[i] = 8; 
-    		  }
-	        else { state->supplyCount[i] = 12; }
-	        }
-        else {
-	        state->supplyCount[i] = 10;
-	      }
-      break;
-      }
-      else {   //card is not in the set choosen for the game
-        state->supplyCount[i] = -1;
-      }
-    }
-  }
+	for (i = adventurer; i <= treasure_map; i++) {       	//loop all cards
+	  	for (j = 0; j < 10; j++) {           		//loop chosen cards
+	      	if (kingdomCards[j] == i) {
+		    	//check if card is a 'Victory' Kingdom card
+		    	if (kingdomCards[j] == great_hall || kingdomCards[j] == gardens) {
+	    			if (numPlayers == 2) { 
+	    		    	state->supplyCount[i] = 8; 
+	    		  	}
+		        	else { state->supplyCount[i] = 12; }
+		        }
+	        	else {
+		        	state->supplyCount[i] = 10;
+		      	}
+	      		break;
+	      	}
+	      	else {   //card is not in the set choosen for the game
+	        	state->supplyCount[i] = -1;
+	      	}
+	    }
+  	}
 
   ////////////////////////
   //supply intilization complete
@@ -647,6 +647,7 @@ void adventurerEffect(struct gameState *state, int curPlayer) {
   int drawntreasure = 0;
   int cardDrawn;
   int z = 0;// this is the counter for the temp hand
+  int i = 0;
 
   while(drawntreasure < 2) {
     /***************************************************************************
@@ -671,6 +672,13 @@ void adventurerEffect(struct gameState *state, int curPlayer) {
 
   while(z - 1 >= 0) {
     state->discard[curPlayer][state->discardCount[curPlayer]++] = temphand[z - 1]; // discard all cards in play that have been drawn
+    /////////////////////////////
+    if(i > 500) {			   // Added so that the test doesn't freeze forever
+    	printf("Test FAILED: \"adventurerEffect\" froze and timedout\n");
+    	break;
+    }						   //
+    i++;					   //
+    /////////////////////////////
     //z = z - 1; 	//---> I introduced this bug because it can be easy to forget 
     				// to iterate your index
   }
@@ -732,8 +740,21 @@ void baronEffect(struct gameState* state, int curPlayer, int choice) {
         }
         if (supplyCount(estate, state) > 0) {
           gainCard(estate, state, 0, curPlayer);
+           /***************************************************************************
+           ***************************************************************************
+           * BUG FOUND HERE!!!! gainCard decrease the number of cards in the estate
+           *  pile, and then the next statement does it again. 
+           ***************************************************************************
+           ***************************************************************************/
           state->supplyCount[estate]--; //Decrement estates
           if (supplyCount(estate, state) == 0) {
+           /***************************************************************************
+           ***************************************************************************
+           * BUG FOUND HERE!!!! this function calls "isGameOver", "isGameOver" returns
+           *  a 1 if the game is over, zero otherwise, but baron card does not do
+           *  anything with the return value.
+           ***************************************************************************
+           ***************************************************************************/
             isGameOver(state);
           }
         }
@@ -754,6 +775,12 @@ void baronEffect(struct gameState* state, int curPlayer, int choice) {
       }
     }
   }
+  /***************************************************************************
+   ***************************************************************************
+   * BUG FOUND HERE!!!! "discard" function is not called here, so the baron
+   * card is not displayed in the "played cards" list when it is played. 
+   ***************************************************************************
+   ***************************************************************************/
 }
 
 
@@ -1350,29 +1377,18 @@ int gainCard(int supplyPos, struct gameState *state, int toFlag, int player)
   return 0;
 }
 
-int updateCoins(int player, struct gameState *state, int bonus)
-{
+int updateCoins(int player, struct gameState *state, int bonus) {
   int i;
 	
   //reset coin count
   state->coins = 0;
 
   //add coins for each Treasure card in player's hand
-  for (i = 0; i < state->handCount[player]; i++)
-    {
-      if (state->hand[player][i] == copper)
-	{
-	  state->coins += 1;
-	}
-      else if (state->hand[player][i] == silver)
-	{
-	  state->coins += 2;
-	}
-      else if (state->hand[player][i] == gold)
-	{
-	  state->coins += 3;
-	}	
-    }	
+  for (i = 0; i < state->handCount[player]; i++) {
+      if (state->hand[player][i] == copper) { state->coins += 1; }
+      else if (state->hand[player][i] == silver) { state->coins += 2; }
+      else if (state->hand[player][i] == gold) { state->coins += 3; }	
+  }
 
   //add bonus
   state->coins += bonus;
