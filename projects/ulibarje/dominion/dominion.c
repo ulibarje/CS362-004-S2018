@@ -674,7 +674,7 @@ void adventurerEffect(struct gameState *state, int curPlayer) {
     state->discard[curPlayer][state->discardCount[curPlayer]++] = temphand[z - 1]; // discard all cards in play that have been drawn
     /////////////////////////////
     if(i > 500) {			   // Added so that the test doesn't freeze forever
-    	printf("Test FAILED: \"adventurerEffect\" froze and timedout\n");
+    	// printf("Test FAILED: \"adventurerEffect\" froze and timedout\n");
     	break;
     }						   //
     i++;					   //
