@@ -1,0 +1,418 @@
+Result for running randomtestcard1 tests:
+
+***************************************************************************
+********************** "great_hall" UNIT TEST RESULTS *********************
+"handCount" variable test 			---> 100000/100000 tests PASSED
+"numActions" variable test 			---> 100000/100000 tests PASSED
+"playedCardCount" variable test 	---> 100000/100000 tests PASSED
+"playedCards pile" test 			---> 100000/100000 tests PASSED
+Unused variables comparison test 	---> 100000/100000 tests PASSED
+***************************************************************************
+
+Execution took 1 seconds to complete.
+
+File 'dominion.c'
+Lines executed:23.81% of 567
+Creating 'dominion.c.gcov'
+
+
+
+Result for running randomtestcard2 tests:
+
+***************************************************************************
+************************* "baron" UNIT TEST RESULTS ***********************
+choice1 = 0 ran 88026 times
+choice1 = 1 ran 11974 times
+"estateCount" variable test 		---> 11974/100000 tests PASSED
+"handCount" variable test 			---> 0/100000 tests PASSED
+"coinCount" variable test 			---> 100000/100000 tests PASSED
+"numBuys" variable test 			---> 100000/100000 tests PASSED
+"discardCount" variable test 		---> 22909/100000 tests PASSED
+"playedCardCount" variable test 	---> 0/100000 tests PASSED
+"playedCards pile" test 			---> 0/100000 tests PASSED
+Unused variables comparison test 	---> 100000/100000 tests PASSED
+***************************************************************************
+
+Execution took 1 seconds to complete.
+
+File 'dominion.c'
+Lines executed:26.81% of 567
+Creating 'dominion.c.gcov'
+
+
+
+Result for running randomtestadventurer tests:
+
+Starting test loops
+***************************************************************************
+********************** "adventurer" UNIT TEST RESULTS *********************
+"handCount" variable test 			---> 11614/100000 tests PASSED
+Testing if new cards are coins 		---> 668/100000 tests PASSED
+"playedCardCount" variable test 	---> 0/100000 tests PASSED
+"playedCards pile" test 			---> 0/100000 tests PASSED
+Unused variables comparison test 	---> 100000/100000 tests PASSED
+***************************************************************************
+
+Execution took 1 seconds to complete.
+
+File 'dominion.c'
+Lines executed:24.87% of 567
+Creating 'dominion.c.gcov'
+
+
+
+Result for running cardtest1 tests:
+
+***************************************************************************
+************************* BEGINNING "smithy" TEST *************************
+***************************************************************************
+
+Testing handCount									--->	FAILED ---> Test: 5, Expected: 7
+Testing playedCardCount								--->	FAILED ---> Test: 3, Expected: 1
+Check that smithy is in playedCards pile			--->	PASSED: Found "smithy" in playedCards pile
+Gamestate comparison of non-involved parameters		--->	PASSED
+
+**************************************************
+"smithy" unit test		---> 	FAILED
+**************************************************
+
+
+File 'dominion.c'
+Lines executed:20.28% of 567
+Creating 'dominion.c.gcov'
+
+
+
+Result for running cardtest2 tests:
+
+***************************************************************************
+*********************** BEGINNING "adventurer" TEST ***********************
+***************************************************************************
+
+
+Testing handCount								--->	PASSED
+Testing if new cards are coins					--->	FAILED
+Testing playedCardCount							--->	FAILED Test: 0, Expected: 1
+Check that adventurer is in playedCards pile	--->	FAILED: No cards in playedCard pile
+Gamestate comparison of non-involved parameters	--->	FAILED: testG->discardCount[player = 0]: 4, refG->discardCount[player = 0]: 0
+
+**************************************************
+"adventurer" unit test		---> 	FAILED
+**************************************************
+
+
+File 'dominion.c'
+Lines executed:22.22% of 567
+Creating 'dominion.c.gcov'
+
+
+
+Result for running cardtest3 tests:
+
+***************************************************************************
+*********************** BEGINNING "great_hall" TEST ***********************
+***************************************************************************
+
+Testing handCount								--->	PASSED
+Testing numActions								--->	PASSED
+Testing playedCardCount							--->	PASSED
+Check that great_hall is in playedCards pile	--->	PASSED
+Gamestate comparison of non-involved parameters	--->	PASSED
+
+**************************************************
+"great_hall" unit test		---> 	PASSED
+**************************************************
+
+
+File 'dominion.c'
+Lines executed:19.75% of 567
+Creating 'dominion.c.gcov'
+
+
+
+Result for running cardtest4 tests:
+
+***************************************************************************
+************************* BEGINNING "baron" TEST **************************
+***************************************************************************
+
+*** Testing "choice1 = 1", discard estate for +4 coins ***
+Testing number of estates in resource pile		--->	PASSED
+Testing handCount								--->	FAILED Test value: 4, Expected: 3
+Testing coin count								--->	PASSED
+Testing number of buys							--->	PASSED
+Testing number of cards in discard pile			--->	PASSED
+Testing playedCardCount							--->	FAILED Test value: 0, Expected: 1
+Check that baron is in playedCards pile			--->	FAILED: No cards in playedCard pile
+Gamestate comparison of non-involved parameters	--->	PASSED
+
+*** Testing "choice1 = 1", (discard estate for +4 coins) with no estates in hand ***
+Testing number of estates in resource pile		--->	FAILED Test value: 6, Expected: 7
+Testing handCount								--->	FAILED Test value: 5, Expected: 4
+Testing coin count								--->	PASSED
+Testing number of buys							--->	PASSED
+Testing number of cards in discard pile			--->	PASSED
+Testing playedCardCount							--->	FAILED Test value: 0, Expected: 1
+Check that baron is in playedCards pile			--->	FAILED: No cards in playedCard pile
+Gamestate comparison of non-involved parameters	--->	PASSED
+
+*** Testing "choice1 = 0", gain estate ***
+Testing number of estates in resource pile		--->	FAILED Test value: 6, Expected: 7
+Testing handCount								--->	FAILED Test value: 5, Expected: 4
+Testing coin count								--->	PASSED
+Testing number of buys							--->	PASSED
+Testing number of cards in discard pile			--->	FAILED Test value: 1, Expected: 0
+Testing playedCardCount							--->	FAILED Test value: 0, Expected: 1
+Check that baron is in playedCards pile			--->	FAILED: No cards in playedCard pile
+Gamestate comparison of non-involved parameters	--->	PASSED
+
+**************************************************
+"baron" unit test		---> 	FAILED
+**************************************************
+
+
+File 'dominion.c'
+Lines executed:23.46% of 567
+Creating 'dominion.c.gcov'
+
+
+
+Result for running unittest1 tests:
+
+***************************************************************************
+********************** BEGINNING "updateCoins" TEST ***********************
+***************************************************************************
+
+Testing with set hand and iterating through bonus from 0 to 10...
+
+All copper in hand			--->	PASSED
+All silver in hand			--->	PASSED
+All gold in hand			--->	PASSED
+One of each coin in hand 	--->	PASSED
+No coins in hand			--->	PASSED
+
+**************************************************
+"updateCoins" unit test		---> 	PASSED
+**************************************************
+
+
+File 'dominion.c'
+Lines executed:16.05% of 567
+Creating 'dominion.c.gcov'
+
+
+
+Result for running unittest2 tests:
+
+***************************************************************************
+************************ BEGINNING "endTurn" TEST *************************
+***************************************************************************
+
+***** Testing with a 2 player game... *****
+Testing "endTurn" for player 0...
+whoseTurn test 			--->	PASSED
+outpostPlayed test 		--->	PASSED
+phase test 				--->	PASSED
+numActions test 		--->	PASSED
+coins test 				--->	PASSED
+numBuys test 			--->	PASSED
+playedCardCount test 	--->	PASSED
+handCount test 			--->	PASSED
+Gamestate Comparison	--->	PASSED
+
+Testing "endTurn" for player 1...
+whoseTurn test 			--->	PASSED
+outpostPlayed test 		--->	PASSED
+phase test 				--->	PASSED
+numActions test 		--->	PASSED
+coins test 				--->	PASSED
+numBuys test 			--->	PASSED
+playedCardCount test 	--->	PASSED
+handCount test 			--->	PASSED
+Gamestate Comparison	--->	PASSED
+
+***** Testing with a 3 player game... *****
+Testing "endTurn" for player 0...
+whoseTurn test 			--->	PASSED
+outpostPlayed test 		--->	PASSED
+phase test 				--->	PASSED
+numActions test 		--->	PASSED
+coins test 				--->	PASSED
+numBuys test 			--->	PASSED
+playedCardCount test 	--->	PASSED
+handCount test 			--->	PASSED
+Gamestate Comparison	--->	PASSED
+
+Testing "endTurn" for player 1...
+whoseTurn test 			--->	PASSED
+outpostPlayed test 		--->	PASSED
+phase test 				--->	PASSED
+numActions test 		--->	PASSED
+coins test 				--->	PASSED
+numBuys test 			--->	PASSED
+playedCardCount test 	--->	PASSED
+handCount test 			--->	PASSED
+Gamestate Comparison	--->	PASSED
+
+Testing "endTurn" for player 2...
+whoseTurn test 			--->	PASSED
+outpostPlayed test 		--->	PASSED
+phase test 				--->	PASSED
+numActions test 		--->	PASSED
+coins test 				--->	PASSED
+numBuys test 			--->	PASSED
+playedCardCount test 	--->	PASSED
+handCount test 			--->	PASSED
+Gamestate Comparison	--->	PASSED
+
+***** Testing with a 4 player game... *****
+Testing "endTurn" for player 0...
+whoseTurn test 			--->	PASSED
+outpostPlayed test 		--->	PASSED
+phase test 				--->	PASSED
+numActions test 		--->	PASSED
+coins test 				--->	PASSED
+numBuys test 			--->	PASSED
+playedCardCount test 	--->	PASSED
+handCount test 			--->	PASSED
+Gamestate Comparison	--->	PASSED
+
+Testing "endTurn" for player 1...
+whoseTurn test 			--->	PASSED
+outpostPlayed test 		--->	PASSED
+phase test 				--->	PASSED
+numActions test 		--->	PASSED
+coins test 				--->	PASSED
+numBuys test 			--->	PASSED
+playedCardCount test 	--->	PASSED
+handCount test 			--->	PASSED
+Gamestate Comparison	--->	PASSED
+
+Testing "endTurn" for player 2...
+whoseTurn test 			--->	PASSED
+outpostPlayed test 		--->	PASSED
+phase test 				--->	PASSED
+numActions test 		--->	PASSED
+coins test 				--->	PASSED
+numBuys test 			--->	PASSED
+playedCardCount test 	--->	PASSED
+handCount test 			--->	PASSED
+Gamestate Comparison	--->	PASSED
+
+Testing "endTurn" for player 3...
+whoseTurn test 			--->	PASSED
+outpostPlayed test 		--->	PASSED
+phase test 				--->	PASSED
+numActions test 		--->	PASSED
+coins test 				--->	PASSED
+numBuys test 			--->	PASSED
+playedCardCount test 	--->	PASSED
+handCount test 			--->	PASSED
+Gamestate Comparison	--->	PASSED
+
+**************************************************
+"endTurn" unit test		---> 	PASSED
+**************************************************
+
+
+File 'dominion.c'
+Lines executed:20.81% of 567
+Creating 'dominion.c.gcov'
+
+
+
+Result for running unittest3 tests:
+
+***************************************************************************
+************************ BEGINNING "handCard" TEST ************************
+***************************************************************************
+
+Expecting: curse,			Received: curse			--->	PASSED
+Expecting: estate,			Received: estate		--->	PASSED
+Expecting: duchy,			Received: duchy			--->	PASSED
+Expecting: province,		Received: province		--->	PASSED
+Expecting: copper,			Received: copper		--->	PASSED
+Expecting: silver,			Received: silver		--->	PASSED
+Expecting: gold,			Received: gold			--->	PASSED
+Expecting: adventurer,		Received: adventurer	--->	PASSED
+Expecting: council_room,	Received: council_room	--->	PASSED
+Expecting: feast,			Received: feast			--->	PASSED
+Expecting: gardens,			Received: gardens		--->	PASSED
+Expecting: mine,			Received: mine			--->	PASSED
+Expecting: remodel,			Received: remodel		--->	PASSED
+Expecting: smithy,			Received: smithy		--->	PASSED
+Expecting: village,			Received: village		--->	PASSED
+Expecting: baron,			Received: baron			--->	PASSED
+Expecting: great_hall,		Received: great_hall	--->	PASSED
+Expecting: minion,			Received: minion		--->	PASSED
+Expecting: steward,			Received: steward		--->	PASSED
+Expecting: tribute,			Received: tribute		--->	PASSED
+Expecting: ambassador,		Received: ambassador	--->	PASSED
+Expecting: cutpurse,		Received: cutpurse		--->	PASSED
+Expecting: embargo,			Received: embargo		--->	PASSED
+Expecting: outpost,			Received: outpost		--->	PASSED
+Expecting: salvager,		Received: salvager		--->	PASSED
+Expecting: sea_hag,			Received: sea_hag		--->	PASSED
+Expecting: treasure_map,	Received: treasure_map	--->	PASSED
+
+**************************************************
+"handCard" unit test		---> 	PASSED
+**************************************************
+
+
+File 'dominion.c'
+Lines executed:16.75% of 567
+Creating 'dominion.c.gcov'
+
+
+
+Result for running unittest4 tests:
+
+***************************************************************************
+********************** BEGINNING "discardCard" TEST ***********************
+***************************************************************************
+
+Description:
+Test initializes a game with a variable number of random cards to start. We start
+with 1 card in hand, run the discard card test, re-initialize game with 2 random
+cards in hand, and re-run the discard test. This is repeated up to 10 cards in
+hand, and then starts over. The second time around, the cards are trashed instead
+of simply discarding them. The test manually discards or trashes the card using
+a reference gamestate, and then compares the entire gamestate to the test gamestate
+that used the "discardCard" function
+
+Testing "discardCard" with "toTrash" option OFF...
+Test with 1 cards	--->	PASSED
+Test with 2 cards	--->	PASSED
+Test with 3 cards	--->	PASSED
+Test with 4 cards	--->	PASSED
+Test with 5 cards	--->	PASSED
+Test with 6 cards	--->	PASSED
+Test with 7 cards	--->	PASSED
+Test with 8 cards	--->	PASSED
+Test with 9 cards	--->	PASSED
+Test with 10 cards	--->	PASSED
+
+Testing "discardCard" with "toTrash" option ON...
+Test with 1 cards	--->	PASSED
+Test with 2 cards	--->	PASSED
+Test with 3 cards	--->	PASSED
+Test with 4 cards	--->	PASSED
+Test with 5 cards	--->	PASSED
+Test with 6 cards	--->	PASSED
+Test with 7 cards	--->	PASSED
+Test with 8 cards	--->	PASSED
+Test with 9 cards	--->	PASSED
+Test with 10 cards	--->	PASSED
+
+**************************************************
+"discardCard" unit test		---> 	PASSED
+**************************************************
+
+
+File 'dominion.c'
+Lines executed:17.81% of 567
+Creating 'dominion.c.gcov'
+
+
+
