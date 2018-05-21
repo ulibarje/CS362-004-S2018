@@ -79,6 +79,14 @@ randomtestadventurer.out: randomtestadventurer
 	gcov dominion.gdca >> testSuiteResults.out
 	echo -e '\n' >> testSuiteResults.out
 
+randomtestsmithy.out: randomtestsmithy
+	echo "Result for running randomtestsmithy tests:" >> testSuiteResults.out
+	echo "" >> testSuiteResults.out
+	./randomtestsmithy >> testSuiteResults.out
+	echo "" >> testSuiteResults.out
+	gcov dominion.gdca >> testSuiteResults.out
+	echo -e '\n' >> testSuiteResults.out
+
 cardtest1.out: cardtest1
 	echo "Result for running cardtest1 tests:" >> testSuiteResults.out
 	echo "" >> testSuiteResults.out
@@ -117,6 +125,7 @@ alltests:
 	$(MAKE) randomtestcard1.out
 	$(MAKE) randomtestcard2.out
 	$(MAKE) randomtestadventurer.out
+	$(MAKE) randomtestsmithy.out
 	$(MAKE) cardtest1.out
 	$(MAKE) cardtest2.out
 	$(MAKE) cardtest3.out

@@ -689,9 +689,9 @@ void smithyCard(struct gameState *state, int currentPlayer, int handPos){
 	{
 		drawCard(currentPlayer, state);
 		//discard card from hand
-		discardCard(handPos, currentPlayer, state, 0); // *Added bug*
+		// discardCard(handPos, currentPlayer, state, 0); // *licaris Added bug*
 	}
-			
+		discardCard(handPos, currentPlayer, state, 0); // <---- ulibarje bug fix
      
 }
 
